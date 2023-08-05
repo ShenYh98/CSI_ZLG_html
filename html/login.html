@@ -57,11 +57,33 @@
         }
 
         function resetPassword() {
-            var confirmReset = confirm("确定要重置密码吗？");
-            if (confirmReset) {
-                // 跳转到重置密码页面
-                window.location.href = "reset-password.html";
-            }
+            var username = document.getElementById("username").value;
+            var password = parseInt(document.getElementById("password").value);
+
+            // 使用 Fetch API 获取 JSON 文件内容
+            fetch('json/user.json')
+                .then(response => response.json())
+                .then(data => {
+                    // 解析得到的 JSON 数据
+                    const nametmp = data.name;
+                    const passwordtmp = data.password;
+
+                    // 检查用户名和密码是否匹配
+                    if (username === nametmp && password === passwordtmp) {
+                        // 用户密码正确
+                        var confirmReset = confirm("确定要重置密码吗？");
+                        if (confirmReset) {
+                            // 跳转到重置密码页面
+                            window.location.href = "reset-password.html";
+                        }
+                    } else {
+                        // 登录失败，弹出提示
+                        alert("用户名或密码不正确！");
+                    }
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                });
         }
     </script>
 </head>
