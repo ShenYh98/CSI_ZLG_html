@@ -1,0 +1,35 @@
+<!-- H5页面代码，使用WebSocket与C++进程通信，并显示电压、电流和温度 -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>WebSocket通信示例</title>
+</head>
+<body>
+  <h3>电压: <span id="voltage"></span></h3>
+  <h3>电流: <span id="current"></span></h3>
+  <h3>温度: <span id="temperature"></span></h3>
+
+  <script>
+    const websocket = new WebSocket("ws://192.168.193.134:9002");
+
+    websocket.onopen = function() {
+      console.log("WebSocket连接已打开");
+    };
+
+    websocket.onmessage = function(event) {
+      const data = event.data;
+      const [voltage, current, temperature] = data.split(",");
+
+      document.getElementById("voltage").textContent = voltage + "V";
+      document.getElementById("current").textContent = current + "A";
+      document.getElementById("temperature").textContent = temperature + "℃";
+
+      console.log("电压 ", voltage);
+      console.log("电流 ", current);
+      console.log("温度", temperature);
+    };
+  </script>
+</body>
+</html>

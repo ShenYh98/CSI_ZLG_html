@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>与C++服务器通信示例</title>
+</head>
+<body>
+    <input type="text" id="message-input" placeholder="输入消息">
+    <button onclick="sendMessage()">发送消息到C++服务器</button>
+
+    <script>
+        function sendMessage() {
+            var message = document.getElementById("message-input").value;
+
+            // 发送消息给 C++ 服务器
+            fetch("http://192.168.193.134:9003/api", {
+                method: "POST",
+                body: message
+            }).then(function(response) {
+                return response.text();
+            }).then(function(data) {
+                console.log("接收到来自C++服务器的响应: " + data);
+            }).catch(function(error) {
+                console.error("发送请求失败: " + error);
+            });
+        }
+    </script>
+</body>
+</html>
