@@ -30,82 +30,70 @@
         }
     </style>
     <script>
+        function processRequest(button, successCallback) {
+            var username = document.getElementById("username").value;
+            var password = parseInt(document.getElementById("password").value);
+
+            var requestData = {
+                taskID: 0,
+                taskName: "GetPassWord",
+                responseTime: 2,
+                data: {
+                    username: username,
+                    password: password
+                }
+            };
+
+            button.disabled = true; // 禁用按钮
+    
+            fetch('http://192.168.193.134:9000/api', {
+                method: 'POST',
+                // headers: {
+                //     'Content-Type': 'application/json'
+                // },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                button.disabled = false; // 启用按钮
+                // 处理响应结果
+                if (response.ok) {
+                    successCallback();
+                } else {
+                    // 登录失败或重置失败，弹出提示
+                    alert("用户名或密码不正确！");
+                }
+            })
+            .catch(error => {
+                button.disabled = false; // 启用按钮
+                // 处理请求错误
+                console.log("请求失败:", error);
+            });
+        }
+    
         function login() {
-            var username = document.getElementById("username").value;
-            var password = parseInt(document.getElementById("password").value);
-
-            var requestData = {
-                taskID: 0,
-                taskName: "GetPassWord",
-                data: {
-                    username: username,
-                    password: password
-                }
-            };
-
-            fetch('http://192.168.1.136:9000/api', {
-                method: 'POST',
-                // headers: {
-                //     'Content-Type': 'application/json'
-                // },
-                body: JSON.stringify(requestData)
-            })
-            .then(response => {
-                // 处理响应结果
-                if (response.ok) {
-                    // 登录成功，跳转到index页面
-                    window.location.href = "index_page/index.html";
-                } else {
-                    // 登录失败，弹出提示
-                    alert("用户名或密码不正确！");
-                }
-            })
-            .catch(error => {
-                // 处理请求错误
-                console.log("请求失败:", error);
-            });
+            var button = document.getElementById("loginBtn");
+    
+            function loginSuccessCallback() {
+                // 登录成功，跳转到index页面
+                window.location.href = "index_page/index.html";
+            }
+    
+            processRequest(button, loginSuccessCallback);
         }
-
+    
         function resetPassword() {
-            var username = document.getElementById("username").value;
-            var password = parseInt(document.getElementById("password").value);
-
-            var requestData = {
-                taskID: 0,
-                taskName: "GetPassWord",
-                data: {
-                    username: username,
-                    password: password
+            var button = document.getElementById("resetBtn");
+    
+            function resetSuccessCallback() {
+                var confirmReset = confirm("确定要重置密码吗？");
+                if (confirmReset) {
+                    // 跳转到重置密码页面
+                    window.location.href = "reset-password.html";
                 }
-            };
-
-            fetch('http://192.168.1.136:9000/api', {
-                method: 'POST',
-                // headers: {
-                //     'Content-Type': 'application/json'
-                // },
-                body: JSON.stringify(requestData)
-            })
-            .then(response => {
-                // 处理响应结果
-                if (response.ok) {
-                    // 用户名密码正确
-                    var confirmReset = confirm("确定要重置密码吗？");
-                    if (confirmReset) {
-                        // 跳转到重置密码页面
-                        window.location.href = "reset-password.html";
-                    }
-                } else {
-                    // 失败，弹出提示
-                    alert("用户名或密码不正确！");
-                }
-            })
-            .catch(error => {
-                // 处理请求错误
-                console.log("请求失败:", error);
-            });
+            }
+    
+            processRequest(button, resetSuccessCallback);
         }
-
     </script>
 </head>
 <body>
@@ -117,8 +105,8 @@
         <label for="password">密码：</label>
         <input type="password" id="password" name="password"><br><br>
 
-        <button type="button" onclick="login()">登录</button>
-        <button type="button" onclick="resetPassword()">重置</button>
+        <button id="loginBtn" type="button" onclick="login()">登录</button>
+        <button id="resetBtn" type="button" onclick="resetPassword()">重置</button>
     </form>
 </body>
 </html>
