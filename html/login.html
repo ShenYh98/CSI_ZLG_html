@@ -34,57 +34,78 @@
             var username = document.getElementById("username").value;
             var password = parseInt(document.getElementById("password").value);
 
-            // 使用 Fetch API 获取 JSON 文件内容
-            fetch('json/user.json')
-                .then(response => response.json())
-                .then(data => {
-                    // 解析得到的 JSON 数据
-                    const nametmp = data.name;
-                    const passwordtmp = data.password;
+            var requestData = {
+                taskID: 0,
+                taskName: "GetPassWord",
+                data: {
+                    username: username,
+                    password: password
+                }
+            };
 
-                    // 检查用户名和密码是否匹配
-                    if (username === nametmp && password === passwordtmp) {
-                        // 登录成功，跳转到index页面
-                        window.location.href = "index_page/index.html";
-                    } else {
-                        // 登录失败，弹出提示
-                        alert("用户名或密码不正确！");
-                    }
-                })
-                .catch(error => {
-                    console.log('Error:', error);
-                });
+            fetch('http://192.168.1.136:9000/api', {
+                method: 'POST',
+                // headers: {
+                //     'Content-Type': 'application/json'
+                // },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                // 处理响应结果
+                if (response.ok) {
+                    // 登录成功，跳转到index页面
+                    window.location.href = "index_page/index.html";
+                } else {
+                    // 登录失败，弹出提示
+                    alert("用户名或密码不正确！");
+                }
+            })
+            .catch(error => {
+                // 处理请求错误
+                console.log("请求失败:", error);
+            });
         }
 
         function resetPassword() {
             var username = document.getElementById("username").value;
             var password = parseInt(document.getElementById("password").value);
 
-            // 使用 Fetch API 获取 JSON 文件内容
-            fetch('json/user.json')
-                .then(response => response.json())
-                .then(data => {
-                    // 解析得到的 JSON 数据
-                    const nametmp = data.name;
-                    const passwordtmp = data.password;
+            var requestData = {
+                taskID: 0,
+                taskName: "GetPassWord",
+                data: {
+                    username: username,
+                    password: password
+                }
+            };
 
-                    // 检查用户名和密码是否匹配
-                    if (username === nametmp && password === passwordtmp) {
-                        // 用户密码正确
-                        var confirmReset = confirm("确定要重置密码吗？");
-                        if (confirmReset) {
-                            // 跳转到重置密码页面
-                            window.location.href = "reset-password.html";
-                        }
-                    } else {
-                        // 登录失败，弹出提示
-                        alert("用户名或密码不正确！");
+            fetch('http://192.168.1.136:9000/api', {
+                method: 'POST',
+                // headers: {
+                //     'Content-Type': 'application/json'
+                // },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                // 处理响应结果
+                if (response.ok) {
+                    // 用户名密码正确
+                    var confirmReset = confirm("确定要重置密码吗？");
+                    if (confirmReset) {
+                        // 跳转到重置密码页面
+                        window.location.href = "reset-password.html";
                     }
-                })
-                .catch(error => {
-                    console.log('Error:', error);
-                });
+                } else {
+                    // 失败，弹出提示
+                    alert("用户名或密码不正确！");
+                }
+            })
+            .catch(error => {
+                // 处理请求错误
+                console.log("请求失败:", error);
+            });
         }
+
     </script>
 </head>
 <body>

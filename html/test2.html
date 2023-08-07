@@ -13,7 +13,7 @@
             var message = document.getElementById("message-input").value;
 
             // 发送消息给 C++ 服务器
-            fetch("http://192.168.193.134:9003/api", {
+            fetch("http://192.168.1.136:9000/api", {
                 method: "POST",
                 body: message
             }).then(function(response) {
