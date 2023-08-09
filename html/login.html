@@ -37,7 +37,7 @@
             var requestData = {
                 taskID: 0,
                 taskName: "GetPassWord",
-                responseTime: 2,
+                responseTime: 5,
                 data: {
                     username: username,
                     password: password
@@ -46,7 +46,7 @@
 
             button.disabled = true; // ½ûÓÃ°´Å¥
     
-            fetch('http://192.168.193.134:9000/api', {
+            fetch('http://192.168.1.136:9000/api', {
                 method: 'POST',
                 // headers: {
                 //     'Content-Type': 'application/json'
