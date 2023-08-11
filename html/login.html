@@ -30,7 +30,10 @@
         }
     </style>
     <script>
-        function processRequest(button, successCallback) {
+        function processRequest(successCallback) {
+            var button1 = document.getElementById("loginBtn");
+            var button2 = document.getElementById("resetBtn");
+
             var username = document.getElementById("username").value;
             var password = parseInt(document.getElementById("password").value);
 
@@ -44,7 +47,8 @@
                 }
             };
 
-            button.disabled = true; // 禁用按钮
+            button1.disabled = true; // 禁用按钮
+            button2.disabled = true;
     
             fetch('http://192.168.1.136:9000/api', {
                 method: 'POST',
@@ -54,7 +58,8 @@
                 body: JSON.stringify(requestData)
             })
             .then(response => {
-                button.disabled = false; // 启用按钮
+                button1.disabled = false; // 启用按钮
+                button2.disabled = false;
                 // 处理响应结果
                 if (response.ok) {
                     successCallback();
@@ -64,26 +69,23 @@
                 }
             })
             .catch(error => {
-                button.disabled = false; // 启用按钮
+                button1.disabled = false; // 启用按钮
+                button2.disabled = false;
                 // 处理请求错误
                 console.log("请求失败:", error);
             });
         }
     
         function login() {
-            var button = document.getElementById("loginBtn");
-    
             function loginSuccessCallback() {
                 // 登录成功，跳转到index页面
                 window.location.href = "index_page/index.html";
             }
     
-            processRequest(button, loginSuccessCallback);
+            processRequest(loginSuccessCallback);
         }
     
         function resetPassword() {
-            var button = document.getElementById("resetBtn");
-    
             function resetSuccessCallback() {
                 var confirmReset = confirm("确定要重置密码吗？");
                 if (confirmReset) {
@@ -92,7 +94,7 @@
                 }
             }
     
-            processRequest(button, resetSuccessCallback);
+            processRequest(resetSuccessCallback);
         }
     </script>
 </head>

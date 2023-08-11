@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        height: 1400px;
+        width: 2100px;
+
+        background-color: #000000;
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    header {
+        height: 4%;
+        background-color: #eca5a5;
+    }
+    nav {
+        height: 4%;
+        background-color: #b9f3b3;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 20px;
+    }
+    nav button {
+        padding: 12px 24px;
+        background-color: #ccc;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 20px;
+    }
+
+    main {
+        height: 90%;
+        background-color: #c8a3e0;
+        /* margin-top: -20px; */
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 20px;
+    }
+    .nav-bar {
+        width: 30%;
+        height: 100%;
+        background-color: #70b6e8;
+    }
+
+    .guide-collapse {
+        display: none;
+        background-color: #ccc;
+        margin-top: 20px;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+    }
+    .guide-collapsed-content {
+        display: none;
+        margin-top: 10px;
+    }
+    .devmonitor-collapse {
+        display: none;
+        background-color: #ccc;
+        margin-top: 20px;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+    }
+    .devmonitor-collapsed-content {
+        display: none;
+        margin-top: 10px;
+    }
+
+    .content {
+        width: 70%;
+        height: 100%;
+        background-color: #d2e896;
+    }
+
+    .device-table {
+        display: none;
+    }
+
+    .device-activity-table {
+        display: none;
+    }
+
+    #popupForm {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+    }
+
+    #popupForm input {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    footer {
+        height: 1%;
+        background-color: #a1a0ee;
+        clear: both;
+    }
+  </style>
+  <script>
+
+    // ui交互逻辑
+    window.addEventListener('DOMContentLoaded', function() {
+      const btnGuide = document.querySelector('#guide-btn');
+      const collapseGuide = document.querySelector('.guide-collapse');
+      const collapsedContentGuide = document.querySelector('.guide-collapsed-content');
+      const deviceTable = document.querySelector('.device-table');
+
+      // 导航表格显示
+      btnGuide.addEventListener('click', function() {
+        deviceActivityTable.style.display = 'none';
+        collapseGuide.style.display = 'block';
+        collapseDevMonitor.style.display = 'none';
+      });
+      collapseGuide.addEventListener('click', function() {
+        collapsedContentGuide.style.display = 'block';
+      });
+      // 开始向导->设备管理
+      const deviceMamage = document.querySelector('.device_mamage');
+      deviceMamage.addEventListener('click', function() {
+        deviceTable.style.displaPy = 'block';
+      });
+      const baseParam = document.querySelector('.base_param');
+      baseParam.addEventListener('click', function() {
+        deviceTable.style.display = 'none';
+      });
+
+      const btnDevMonitor = document.querySelector('#devmonitor-btn');
+      const collapseDevMonitor = document.querySelector('.devmonitor-collapse');
+      const collapsedContentDevMonitor = document.querySelector('.devmonitor-collapsed-content');
+      const deviceActivityTable = document.querySelector('.device-activity-table');
+
+      // 设备监控表格显示
+      btnDevMonitor.addEventListener('click', function() {
+        deviceTable.style.display = 'none';
+        collapseGuide.style.display = 'none';
+        collapseDevMonitor.style.display = 'block';
+      });
+      collapseDevMonitor.addEventListener('click', function() {
+        collapsedContentDevMonitor.style.display = 'block';
+      });
+      collapsedContentDevMonitor.addEventListener('click', function() {
+        deviceActivityTable.style.display = 'block';
+      });
+    });
+
+    // 设备增删改查表单逻辑
+    window.addEventListener('DOMContentLoaded', function() {
+      const addBtn = document.getElementById("addBtn");
+      const deleteBtn = document.getElementById("deleteBtn");
+      const editBtn = document.getElementById("editBtn");
+      const selectAllCheckbox = document.getElementById("selectAll");
+      const deviceList = document.getElementById("deviceList");
+      const popupForm = document.getElementById("popupForm");
+      const deviceNameInput = document.getElementById("deviceName");
+      const portInput = document.getElementById("port");
+      const communicationAddressInput = document.getElementById("communicationAddress");
+      const snInput = document.getElementById("sn");
+      const deviceStatusInput = document.getElementById("deviceStatus");
+      const saveBtn = document.getElementById("saveBtn");
+      const cancelBtn = document.getElementById("cancelBtn");
+
+      let devices = [];
+
+      addBtn.addEventListener("click", function() {
+        clearFormInputs();
+        showPopupForm();
+      });
+
+      deleteBtn.addEventListener("click", function() {
+        const checkboxes = deviceList.querySelectorAll('input[type="checkbox"]:checked');
+        checkboxes.forEach(function(checkbox) {
+          const row = checkbox.parentNode.parentNode;
+          const index = row.rowIndex - 1;
+          devices.splice(index, 1);
+          row.remove();
+        });
+        selectAllCheckbox.checked = false;
+      });
+
+      editBtn.addEventListener("click", function() {
+        const checkboxes = deviceList.querySelectorAll('input[type="checkbox"]:checked');
+        if (checkboxes.length !== 1) {
+          alert("请选择一个设备进行编辑");
+          return;
+        }
+        const row = checkboxes[0].parentNode.parentNode;
+        const index = row.rowIndex - 1;
+        const device = devices[index];
+        fillFormInputs(device);
+        showPopupForm();
+      });
+
+      selectAllCheckbox.addEventListener("change", function() {
+        const checkboxes = deviceList.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(function(checkbox) {
+          checkbox.checked = selectAllCheckbox.checked;
+        });
+      });
+
+      saveBtn.addEventListener("click", function() {
+        const name = deviceNameInput.value.trim();
+        const port = portInput.value.trim();
+        const communicationAddress = communicationAddressInput.value.trim();
+        const sn = snInput.value.trim();
+        const deviceStatus = deviceStatusInput.value.trim();
+
+        if (name === "" || port === "" || communicationAddress === "" || sn === "" || deviceStatus === "") {
+          alert("请填写完整设备信息");
+          return;
+        }
+
+        const newDevice = {
+          name: name,
+          port: port,
+          communicationAddress: communicationAddress,
+          sn: sn,
+          deviceStatus: deviceStatus
+        };
+
+        const checkboxes = deviceList.querySelectorAll('input[type="checkbox"]:checked');
+        if (checkboxes.length === 1) {
+          // 编辑模式
+          const row = checkboxes[0].parentNode.parentNode;
+          const index = row.rowIndex - 1;
+          devices[index] = newDevice;
+          updateTableRow(row, newDevice);
+        } else {
+          // 新增模式
+          devices.push(newDevice);
+          const newRow = generateTableRow(newDevice);
+          deviceList.appendChild(newRow);
+        }
+
+        clearFormInputs();
+        hidePopupForm();
+      });
+
+      cancelBtn.addEventListener("click", function() {
+        clearFormInputs();
+        hidePopupForm();
+      });
+
+      function generateTableRow(device) {
+        const row = document.createElement("tr");
+        const checkboxCell = document.createElement("td");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkboxCell.appendChild(checkbox);
+
+        const indexCell = document.createElement("td");
+        indexCell.textContent = devices.length + 1;
+
+        const nameCell = document.createElement("td");
+        nameCell.textContent = device.name;
+
+        const portCell = document.createElement("td");
+        portCell.textContent = device.port;
+
+        const communicationAddressCell = document.createElement("td");
+        communicationAddressCell.textContent = device.communicationAddress;
+
+        const snCell = document.createElement("td");
+        snCell.textContent = device.sn;
+
+        const deviceStatusCell = document.createElement("td");
+        deviceStatusCell.textContent = device.deviceStatus;
+
+        row.appendChild(checkboxCell);
+        row.appendChild(indexCell);
+        row.appendChild(nameCell);
+        row.appendChild(portCell);
+        row.appendChild(communicationAddressCell);
+        row.appendChild(snCell);
+        row.appendChild(deviceStatusCell);
+
+        return row;
+      }
+
+      function updateTableRow(row, device) {
+        const cells = row.cells;
+        cells[2].textContent = device.name;
+        cells[3].textContent = device.port;
+        cells[4].textContent = device.communicationAddress;
+        cells[6].textContent = device.sn;
+        cells[7].textContent = device.deviceStatus;
+      }
+
+      function fillFormInputs(device) {
+        deviceNameInput.value = device.name;
+        portInput.value = device.port;
+        communicationAddressInput.value = device.communicationAddress;
+        snInput.value = device.sn;
+        deviceStatusInput.value = device.deviceStatus;
+      }
+
+      function clearFormInputs() {
+        deviceNameInput.value = "";
+        portInput.value = "";
+        communicationAddressInput.value = "";
+        snInput.value = "";
+        deviceStatusInput.value = "";
+      }
+
+      function showPopupForm() {
+        popupForm.style.display = "block";
+      }
+
+      function hidePopupForm() {
+        popupForm.style.display = "none";
+      }
+
+      // 初始化表格数据，可以从后端获取数据进行填充
+      devices = [];
+
+      devices.forEach(function(device) {
+        const row = generateTableRow(device);
+        deviceList.appendChild(row);
+      });
+    });
+  
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header></header>
+    <nav>
+      <ul>
+        <button id="guide-btn">开始向导</button>
+        <button>概览</button>
+        <button id="devmonitor-btn">设备监控</button>
+        <button>历史查询</button>
+        <button>设置</button>
+        <button>维护</button>
+      </ul>
+    </nav>
+    <main>
+      <div class="nav-bar">
+          <!-- 开始向导 -->
+          <div class="guide-collapse">
+            开始向导
+            <div class="guide-collapsed-content">
+              <div class="base_param"> <li> 基本参数<br> </li> </div>
+              <div class="device_mamage"> <li> 设备管理 </li> </div>
+            </div>
+          </div>
+
+          <!-- 设备监控 -->
+          <div class="devmonitor-collapse">
+            B204
+            <div class="devmonitor-collapsed-content">
+              <li> SN0000001<br> </li>
+              <li> SN0000002<br> </li>
+              <li> SN0000003 </li>
+            </div>
+          </div>
+      </div>
+      <div class="content">
+          <!-- 设备设置表单 -->
+          <div class="device-table" id="device-table">
+            <button id="addBtn">增加</button>
+            <button id="deleteBtn">删除</button>
+            <button id="editBtn">修改</button>
+            <table>
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="selectAll" />全选</th>
+                  <th>序号</th>
+                  <th>设备名称</th>
+                  <th>端口</th>
+                  <th>通信地址</th>
+                  <th>SN</th>
+                  <th>设备状态</th>
+                </tr>
+              </thead>
+              <tbody id="deviceList">
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 设备活动监控表单 -->
+          <div class="device-activity-table" id="device-activity-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>源名称</th>
+                  <th>值</th>
+                  <th>单位</th>
+                </tr>
+              </thead>
+              <tbody id="deviceList">
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 这里弹窗事件的内容 -->
+          <div id="popupForm">
+            <input type="text" id="deviceName" placeholder="设备名称" />
+            <input type="text" id="port" placeholder="端口" />
+            <input type="text" id="communicationAddress" placeholder="通信地址" />
+            <input type="text" id="sn" placeholder="SN" />
+            <input type="text" id="deviceStatus" placeholder="设备状态" />
+            <button id="saveBtn">保存</button>
+            <button id="cancelBtn">取消</button>
+          </div>
+      </div>
+    </main>
+    <footer></footer>
+  </div>
+</body>
+</html>
