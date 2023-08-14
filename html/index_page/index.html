@@ -70,7 +70,7 @@
         display: none;
         margin-top: 10px;
     }
-    .devmonitor-collapse {
+    .devmonitor-collapse-PCS {
         display: none;
         background-color: #ccc;
         margin-top: 20px;
@@ -78,7 +78,7 @@
         text-align: center;
         cursor: pointer;
     }
-    .devmonitor-collapsed-content {
+    .devmonitor-collapsed-PCS-content {
         display: none;
         margin-top: 10px;
     }
@@ -157,7 +157,7 @@
         deviceActivityTable.style.display = 'none';
 
         collapseGuide.style.display = 'block';
-        collapseDevMonitor.style.display = 'none';
+        PCScollapseDevMonitor.style.display = 'none';
       });
       collapseGuide.addEventListener('click', function() {
         collapsedContentGuide.style.display = 'block';
@@ -187,8 +187,8 @@
       
 
       const btnDevMonitor = document.querySelector('#devmonitor-btn');
-      const collapseDevMonitor = document.querySelector('.devmonitor-collapse');
-      const collapsedContentDevMonitor = document.querySelector('.devmonitor-collapsed-content');
+      const PCScollapseDevMonitor = document.querySelector('.devmonitor-collapse-PCS');
+      const PCScollapsedContentDevMonitor = document.querySelector('.devmonitor-collapsed-PCS-content');
 
       const deviceActivityTable = document.querySelector('.device-activity-table');
 
@@ -200,17 +200,115 @@
         deviceActivityTable.style.display = 'none';
 
         collapseGuide.style.display = 'none';
-        collapseDevMonitor.style.display = 'block';
+        PCScollapseDevMonitor.style.display = 'block';
       });
-      collapseDevMonitor.addEventListener('click', function() {
-        collapsedContentDevMonitor.style.display = 'block';
+      PCScollapseDevMonitor.addEventListener('click', function() {
+        PCScollapsedContentDevMonitor.style.display = 'block';
       });
-      collapsedContentDevMonitor.addEventListener('click', function() {
+      PCScollapsedContentDevMonitor.addEventListener('click', function() {
         deviceActivityTable.style.display = 'block';
       });
     });
 
+    // 定义设备表格和通道表格的数据获取URL
+    const Url = "http://192.168.1.136:9000/api";
+    // 页面加载完成时请求数据并填充表格
+    window.onload = function() {
+      var requestData_getDevTable = {
+        taskID: 3,
+        taskName: "getDevTable",
+        responseTime: 1
+      };
+      // 请求设备表格的数据
+      fetch(Url, {
+        method: "POST",
+        body: JSON.stringify(requestData_getDevTable)
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        console.log("解析后的响应数据:", data.data);  // 打印解析后的响应数据
+        const parsedData = JSON.parse(data.data);
+        fillDeviceTable(parsedData.data.table);
+      })
+      .catch(error => {
+        // 处理请求错误
+        console.log("请求失败:", error);
+      });
+
+      var requestData_getChannelTable = {
+        taskID: 4,
+        taskName: "getChannelTable",
+        responseTime: 1
+      };
+      // 请求通道表格的数据
+      fetch(Url, {
+        method: "POST",
+        body: JSON.stringify(requestData_getChannelTable)
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        console.log("解析后的响应数据:", data.data);  // 打印解析后的响应数据
+        const parsedData = JSON.parse(data.data);
+        fillChannelTable(parsedData.data.table)
+      })
+      .catch(error => {
+            // 处理请求错误
+            console.log("请求失败:", error);
+      });
+    }
+    // 填充设备表格
+    function fillDeviceTable(tableData) {
+      const deviceList = document.getElementById('deviceList');
+      deviceList.innerHTML = ''; // 清空现有数据
+
+      tableData.forEach((row, index) => {
+          const tr = document.createElement('tr');
+          
+          tr.innerHTML = `
+              <td><input type="checkbox"></td>
+              <td>${index + 1}</td>
+              <td>${row.name}</td>
+              <td>${row.port}</td>
+              <td></td>
+              <td>${row.communicationAddress}</td>
+              <td>${row.category}</td>
+              <td>${row.model}</td>
+              <td>${row.sn}</td>
+              <td>${row.deviceStatus}</td>
+          `;
+
+          deviceList.appendChild(tr);
+      });
+    }
+    // 填充通道表格
+    function fillChannelTable(tableData) {
+      const channelList = document.getElementById('channelList');
+      channelList.innerHTML = ''; // 清空现有数据
+
+      tableData.forEach((row, index) => {
+          const tr = document.createElement('tr');
+          
+          tr.innerHTML = `
+              <td><input type="checkbox"></td>
+              <td>${index + 1}</td>
+              <td>${row.portName}</td>
+              <td>${row.port}</td>
+              <td>${row.baudRate}</td>
+              <td>${row.dataBits}</td>
+              <td>${row.stopBits}</td>
+              <td>${row.parity}</td>
+          `;
+
+          channelList.appendChild(tr);
+      });
+    }
+
     // 设备增删改查表单逻辑
+    let PCSdevNameList = [];  // 定义外部全局列表
     window.addEventListener('DOMContentLoaded', function() {
       const addBtn = document.getElementById("addBtn");
       const deleteBtn = document.getElementById("deleteBtn");
@@ -220,8 +318,11 @@
       const deviceList = document.getElementById("deviceList");
       const popupForm = document.getElementById("popupForm");
       const deviceNameInput = document.getElementById("deviceName");
-      const portInput = document.getElementById("port");
+      const channelSelect = document.getElementById("channel");
+      const protocolSelect = document.getElementById("protocol");
       const communicationAddressInput = document.getElementById("communicationAddress");
+      const categorySelect = document.getElementById("category");
+      const modelInput = document.getElementById("model");
       const snInput = document.getElementById("sn");
       const deviceStatusInput = document.getElementById("deviceStatus");
       const saveBtn = document.getElementById("saveBtn");
@@ -267,12 +368,18 @@
 
       saveBtn.addEventListener("click", function() {
         const name = deviceNameInput.value.trim();
-        const port = portInput.value.trim();
+        const port = channelSelect.value.trim();
+        const protocol = protocolSelect.value.trim();
         const communicationAddress = communicationAddressInput.value.trim();
+        const category = categorySelect.value.trim();
+        const model = modelInput.value.trim();
         const sn = snInput.value.trim();
         const deviceStatus = deviceStatusInput.value.trim();
 
-        if (name === "" || port === "" || communicationAddress === "" || sn === "" || deviceStatus === "") {
+        // 获取DevtName值
+        let currentDevtName = document.getElementById('deviceName').value;
+
+        if (name === "" || communicationAddress === "" || sn === "" || deviceStatus === "") {
           alert("请填写完整设备信息");
           return;
         }
@@ -280,7 +387,10 @@
         const newDevice = {
           name: name,
           port: port,
+          protocol: protocol,
           communicationAddress: communicationAddress,
+          category: category,
+          model: model,
           sn: sn,
           deviceStatus: deviceStatus
         };
@@ -297,8 +407,15 @@
           devices.push(newDevice);
           const newRow = generateTableRow(newDevice);
           deviceList.appendChild(newRow);
+
+          // 添加portName到portNameList
+          if (!PCSdevNameList.includes(currentDevtName)) {
+              PCSdevNameList.push(currentDevtName);
+              updateOtherTableOptions(PCSdevNameList);  // 3. 更新另一个表的选项
+          }
         }
 
+        sendJsonToServer(); // 将设置好的json发给服务端，服务端再处理
         clearFormInputs();
         hidePopupForm();
       });
@@ -316,7 +433,7 @@
         checkboxCell.appendChild(checkbox);
 
         const indexCell = document.createElement("td");
-        indexCell.textContent = devices.length + 1;
+        indexCell.textContent = devices.length;
 
         const nameCell = document.createElement("td");
         nameCell.textContent = device.name;
@@ -324,8 +441,17 @@
         const portCell = document.createElement("td");
         portCell.textContent = device.port;
 
+        const protocolCell = document.createElement("td");
+        protocolCell.textContent = device.protocol;
+
         const communicationAddressCell = document.createElement("td");
         communicationAddressCell.textContent = device.communicationAddress;
+
+        const categoryCell = document.createElement("td");
+        categoryCell.textContent = device.category;
+
+        const modelCell = document.createElement("td");
+        modelCell.textContent = device.model;
 
         const snCell = document.createElement("td");
         snCell.textContent = device.sn;
@@ -337,7 +463,10 @@
         row.appendChild(indexCell);
         row.appendChild(nameCell);
         row.appendChild(portCell);
+        row.appendChild(protocolCell);
         row.appendChild(communicationAddressCell);
+        row.appendChild(categoryCell);
+        row.appendChild(modelCell);
         row.appendChild(snCell);
         row.appendChild(deviceStatusCell);
 
@@ -348,23 +477,30 @@
         const cells = row.cells;
         cells[2].textContent = device.name;
         cells[3].textContent = device.port;
-        cells[4].textContent = device.communicationAddress;
-        cells[6].textContent = device.sn;
-        cells[7].textContent = device.deviceStatus;
+        cells[4].textContent = device.protocolCell;
+        cells[5].textContent = device.communicationAddress;
+        cells[6].textContent = device.category;
+        cells[7].textContent = device.model;
+        cells[8].textContent = device.sn;
+        cells[9].textContent = device.deviceStatus;
       }
 
       function fillFormInputs(device) {
         deviceNameInput.value = device.name;
-        portInput.value = device.port;
+        channelSelect.value = device.channel;
+        protocolSelect.value = device.protocol;
         communicationAddressInput.value = device.communicationAddress;
+        categorySelect.value = device.category;
+        modelInput.value = device.model;
         snInput.value = device.sn;
         deviceStatusInput.value = device.deviceStatus;
       }
 
       function clearFormInputs() {
         deviceNameInput.value = "";
-        portInput.value = "";
+        // channelSelect.value = "";
         communicationAddressInput.value = "";
+        modelInput.value = "";
         snInput.value = "";
         deviceStatusInput.value = "";
       }
@@ -377,6 +513,64 @@
         popupForm.style.display = "none";
       }
 
+      // 创建一个函数来更新另一个表的选项
+      function updateOtherTableOptions(optionsList) {
+        let otherTableContent = document.getElementById('devmonitor-collapsed-PCS-content');
+
+        optionsList.forEach(optionValue => {
+          let liElem = document.createElement('li');
+          liElem.textContent = optionValue;
+          otherTableContent.appendChild(liElem);
+        });
+      }
+
+      function sendJsonToServer() {
+        let data = [];
+        devices.forEach(function(device) {
+          let rowData = {
+              name: device.name,
+              port: device.port,
+              protocolCell: device.protocolCell,
+              communicationAddress: device.communicationAddress,
+              category: device.category,
+              model: device.model,
+              sn: device.sn,
+              deviceStatus: device.deviceStatus
+          };
+          data.push(rowData);
+        });
+
+        var requestData = {
+            taskID: 1,
+            taskName: "DevTableSave",
+            responseTime: 1,
+            data: {
+              "table" : data
+            }
+        };
+
+        fetch(Url, {
+            method: 'POST',
+            // headers: {
+            //     'Content-Type': 'application/json'
+            // },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => {
+            // 处理响应结果
+            if (response.ok) {
+                alert("保存成功！");
+            } else {
+                // 登录失败或重置失败，弹出提示
+                alert("保存失败！");
+            }
+        })
+        .catch(error => {
+            // 处理请求错误
+            console.log("请求失败:", error);
+        });
+      }
+
       // 初始化表格数据，可以从后端获取数据进行填充
       devices = [];
 
@@ -387,6 +581,7 @@
     });
 
     // 通道增删改查表单逻辑
+    let portNameList = [];  // 定义外部全局列表
     window.addEventListener('DOMContentLoaded', function() {
       const addBtn = document.getElementById('channel-addBtn');
       const deleteBtn = document.getElementById('channel-deleteBtn');
@@ -435,6 +630,10 @@
 
       saveBtn.addEventListener('click', function(e) {
           e.preventDefault();
+
+          // 获取portName值
+          let currentPortName = document.getElementById('portName').value;
+
           if (editingRowIndex !== null) {
               const row = tableBody.children[editingRowIndex];
               row.cells[2].textContent = document.getElementById('portName').value;
@@ -455,13 +654,81 @@
                   <td>${document.getElementById('stopBits').value}</td>
                   <td>${document.getElementById('parity').value}</td>
               `;
+
+              // 添加portName到portNameList
+              if (!portNameList.includes(currentPortName)) {
+                  portNameList.push(currentPortName);
+                  updateOtherTableOptions(portNameList);  // 3. 更新另一个表的选项
+              }
           }
+
+          sendJsonToServer();
+
           form.style.display = 'none';
       });
+
+      // 创建一个函数来更新另一个表的选项
+      function updateOtherTableOptions(optionsList) {
+          let otherTableSelect = document.getElementById('channel');
+
+          optionsList.forEach(optionValue => {
+              let optionElem = document.createElement('option');
+              optionElem.value = optionValue;
+              optionElem.textContent = optionValue;
+              otherTableSelect.appendChild(optionElem);
+          });
+      }
 
       cancelBtn.addEventListener('click', function() {
           form.style.display = 'none';
       });
+
+      function sendJsonToServer() {
+        let data = [];
+
+        // 获取表格中的所有行数据
+        const tableRows = tableBody.getElementsByTagName("tr");
+        for (let i = 0; i < tableRows.length; i++) {
+          const row = tableRows[i];
+          const rowData = {
+            // checkbox: row.cells[0].querySelector("input[type='checkbox']").checked,
+            // index: row.cells[1].textContent,
+            portName: row.cells[2].textContent,
+            port: row.cells[3].textContent,
+            baudRate: row.cells[4].textContent,
+            dataBits: row.cells[5].textContent,
+            stopBits: row.cells[6].textContent,
+            parity: row.cells[7].textContent
+          };
+          data.push(rowData);
+        }
+
+        var requestData = {
+          taskID: 2,
+          taskName: "ChannelTableSave",
+          responseTime: 1,
+          data: {
+            table: data
+          }
+        };
+
+        fetch(Url, {
+          method: "POST",
+          body: JSON.stringify(requestData)
+        })
+          .then(response => {
+            // 处理响应结果
+            if (response.ok) {
+              alert("保存成功！");
+            } else {
+              alert("保存失败！");
+            }
+          })
+          .catch(error => {
+            // 处理请求错误
+            console.log("请求失败:", error);
+          });
+      }
     });
   </script>
 </head>
@@ -485,18 +752,16 @@
             开始向导
             <div class="guide-collapsed-content">
               <div class="base_param"> <li> 基本参数<br> </li> </div>
-              <div class="device_mamage"> <li> 设备管理 </li> </div>
               <div class="channel_mamage"> <li> 通道管理 </li> </div>
+              <div class="device_mamage"> <li> 设备管理 </li> </div>
             </div>
           </div>
 
           <!-- 设备监控 -->
-          <div class="devmonitor-collapse">
-            B204
-            <div class="devmonitor-collapsed-content">
-              <li> SN0000001<br> </li>
-              <li> SN0000002<br> </li>
-              <li> SN0000003 </li>
+          <div class="devmonitor-collapse-PCS">
+            PCS
+            <div class="devmonitor-collapsed-PCS-content" id="devmonitor-collapsed-PCS-content">
+              <!-- 动态显示设备名 -->
             </div>
           </div>
       </div>
@@ -533,8 +798,11 @@
                   <th><input type="checkbox" id="selectAll" />全选</th>
                   <th>序号</th>
                   <th>设备名称</th>
-                  <th>端口</th>
+                  <th>通道</th>
+                  <th>规约</th>
                   <th>通信地址</th>
+                  <th>类别</th>
+                  <th>型号</th>
                   <th>SN</th>
                   <th>设备状态</th>
                 </tr>
@@ -584,8 +852,30 @@
           <!-- 这里弹窗事件的内容 -->
           <div id="popupForm">
             <input type="text" id="deviceName" placeholder="设备名称" />
-            <input type="text" id="port" placeholder="端口" />
+            <!-- <input type="text" id="port" placeholder="通道" /> -->
+
+            <label for="channel">通道: </label>
+            <select id="channel" name="channel">
+              <!-- 添加更多选项 -->
+            </select><br><br>
+
+            <label for="protocol">规约: </label>
+            <select id="protocol" name="protocol">
+              <option value="modbus">modbus</option>
+              <!-- 添加更多选项 -->
+            </select><br><br>
+
             <input type="text" id="communicationAddress" placeholder="通信地址" />
+
+            <label for="category">类别：</label>
+            <select id="category" name="category">
+              <option value="pcs">pcs</option>
+              <option value="bms">bms</option>
+              <!-- 添加更多选项 -->
+            </select><br><br>
+
+            <input type="text" id="model" placeholder="型号" />
+
             <input type="text" id="sn" placeholder="SN" />
             <input type="text" id="deviceStatus" placeholder="设备状态" />
             <button id="saveBtn">保存</button>
