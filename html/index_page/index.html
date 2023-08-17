@@ -228,7 +228,7 @@
         return response.json();
       })
       .then(data => {
-        console.log("解析后的响应数据:", data.data);  // 打印解析后的响应数据
+        console.log("getDevTable:", data.data);  // 打印解析后的响应数据
         const parsedData = JSON.parse(data.data);
         fillDeviceTable(parsedData.data.table);
       })
@@ -251,7 +251,7 @@
         return response.json();
       })
       .then(data => {
-        console.log("解析后的响应数据:", data.data);  // 打印解析后的响应数据
+        console.log("getChannelTable:", data.data);  // 打印解析后的响应数据
         const parsedData = JSON.parse(data.data);
         fillChannelTable(parsedData.data.table)
       })
@@ -273,7 +273,7 @@
               <td>${index + 1}</td>
               <td>${row.name}</td>
               <td>${row.port}</td>
-              <td></td>
+              <td>${row.protocol}</td>
               <td>${row.communicationAddress}</td>
               <td>${row.category}</td>
               <td>${row.model}</td>
@@ -282,6 +282,15 @@
           `;
 
           deviceList.appendChild(tr);
+
+          // 添加数据到外部数组devices
+          devices.push(row);
+
+          // 添加DevName到DevNameList
+          if (!PCSdevNameList.includes(row.name)) {
+              PCSdevNameList.push(row.name);
+              updateDevName(PCSdevNameList);  // 3. 更新另一个表的选项
+          }
       });
     }
     // 填充通道表格
@@ -304,11 +313,18 @@
           `;
 
           channelList.appendChild(tr);
+
+          // 添加portName到portNameList
+          if (!portNameList.includes(row.portName)) {
+              portNameList.push(row.portName);
+              updateChannelName(portNameList);  // 3. 更新另一个表的选项
+          }
       });
     }
 
     // 设备增删改查表单逻辑
     let PCSdevNameList = [];  // 定义外部全局列表
+    let devices = [];
     window.addEventListener('DOMContentLoaded', function() {
       const addBtn = document.getElementById("addBtn");
       const deleteBtn = document.getElementById("deleteBtn");
@@ -328,8 +344,6 @@
       const saveBtn = document.getElementById("saveBtn");
       const cancelBtn = document.getElementById("cancelBtn");
 
-      let devices = [];
-
       addBtn.addEventListener("click", function() {
         clearFormInputs();
         showPopupForm();
@@ -337,13 +351,29 @@
 
       deleteBtn.addEventListener("click", function() {
         const checkboxes = deviceList.querySelectorAll('input[type="checkbox"]:checked');
+
         checkboxes.forEach(function(checkbox) {
           const row = checkbox.parentNode.parentNode;
           const index = row.rowIndex - 1;
+
+          // 获取每一行的值，这可能需要你根据实际的HTML结构进行修改
+          let currentDevtName = row.children[2].textContent;
+
           devices.splice(index, 1);
           row.remove();
+
+          // 从PCSdevNameList中删除对应的DevtName
+          const devtNameIndex = PCSdevNameList.indexOf(currentDevtName);
+          if (devtNameIndex > -1) {
+              PCSdevNameList.splice(devtNameIndex, 1);
+          }
         });
+
         selectAllCheckbox.checked = false;
+
+        sendJsonToServer(); // 将设置好的json发给服务端，服务端再处理
+
+        updateDevName(PCSdevNameList);  // 更新另一个表的选项
       });
 
       editBtn.addEventListener("click", function() {
@@ -408,10 +438,10 @@
           const newRow = generateTableRow(newDevice);
           deviceList.appendChild(newRow);
 
-          // 添加portName到portNameList
+          // 添加DevName到DevNameList
           if (!PCSdevNameList.includes(currentDevtName)) {
               PCSdevNameList.push(currentDevtName);
-              updateOtherTableOptions(PCSdevNameList);  // 3. 更新另一个表的选项
+              updateDevName(PCSdevNameList);  // 3. 更新另一个表的选项
           }
         }
 
@@ -477,7 +507,7 @@
         const cells = row.cells;
         cells[2].textContent = device.name;
         cells[3].textContent = device.port;
-        cells[4].textContent = device.protocolCell;
+        cells[4].textContent = device.protocol;
         cells[5].textContent = device.communicationAddress;
         cells[6].textContent = device.category;
         cells[7].textContent = device.model;
@@ -513,24 +543,13 @@
         popupForm.style.display = "none";
       }
 
-      // 创建一个函数来更新另一个表的选项
-      function updateOtherTableOptions(optionsList) {
-        let otherTableContent = document.getElementById('devmonitor-collapsed-PCS-content');
-
-        optionsList.forEach(optionValue => {
-          let liElem = document.createElement('li');
-          liElem.textContent = optionValue;
-          otherTableContent.appendChild(liElem);
-        });
-      }
-
       function sendJsonToServer() {
         let data = [];
         devices.forEach(function(device) {
           let rowData = {
               name: device.name,
               port: device.port,
-              protocolCell: device.protocolCell,
+              protocol: device.protocol,
               communicationAddress: device.communicationAddress,
               category: device.category,
               model: device.model,
@@ -579,8 +598,22 @@
         deviceList.appendChild(row);
       });
     });
+    // 创建一个函数来更新另一个表的选项D
+    function updateDevName(optionsList) {
+      let otherTableContent = document.getElementById('devmonitor-collapsed-PCS-content');
 
-    // 通道增删改查表单逻辑
+      while (otherTableContent.firstChild) {
+        otherTableContent.removeChild(otherTableContent.firstChild);
+      }
+
+      optionsList.forEach(optionValue => {
+        let liElem = document.createElement('li');
+        liElem.textContent = optionValue;
+        otherTableContent.appendChild(liElem);
+      });
+    }
+
+    // 通道增删改查表单逻辑Channel
     let portNameList = [];  // 定义外部全局列表
     window.addEventListener('DOMContentLoaded', function() {
       const addBtn = document.getElementById('channel-addBtn');
@@ -601,9 +634,25 @@
 
       deleteBtn.addEventListener('click', function() {
           const checkboxes = tableBody.querySelectorAll('input[type="checkbox"]:checked');
+
           checkboxes.forEach(checkbox => {
-              tableBody.removeChild(checkbox.closest('tr'));
+            const row = checkbox.parentNode.parentNode;
+
+            // 获取每一行的值，这可能需要你根据实际的HTML结构进行修改
+            let currentPortName = row.children[2].textContent;
+
+            tableBody.removeChild(checkbox.closest('tr'));
+        
+            // 从portNameList中删除对应的
+            const PortNameIndex = portNameList.indexOf(currentPortName);
+            if (PortNameIndex > -1) {
+              portNameList.splice(PortNameIndex, 1);
+            }
           });
+
+          sendJsonToServer();
+
+          updateChannelName(portNameList);  // 更新另一个表的选项
       });
 
       editBtn.addEventListener('click', function() {
@@ -658,7 +707,7 @@
               // 添加portName到portNameList
               if (!portNameList.includes(currentPortName)) {
                   portNameList.push(currentPortName);
-                  updateOtherTableOptions(portNameList);  // 3. 更新另一个表的选项
+                  updateChannelName(portNameList);  // 3. 更新另一个表的选项
               }
           }
 
@@ -666,18 +715,6 @@
 
           form.style.display = 'none';
       });
-
-      // 创建一个函数来更新另一个表的选项
-      function updateOtherTableOptions(optionsList) {
-          let otherTableSelect = document.getElementById('channel');
-
-          optionsList.forEach(optionValue => {
-              let optionElem = document.createElement('option');
-              optionElem.value = optionValue;
-              optionElem.textContent = optionValue;
-              otherTableSelect.appendChild(optionElem);
-          });
-      }
 
       cancelBtn.addEventListener('click', function() {
           form.style.display = 'none';
@@ -730,6 +767,22 @@
           });
       }
     });
+    // 创建一个函数来更新另一个表的选项
+    function updateChannelName(optionsList) {
+      let otherTableSelect = document.getElementById('channel');
+
+      while (otherTableSelect.firstChild) {
+          otherTableSelect.removeChild(otherTableSelect.firstChild);
+      }
+
+      optionsList.forEach(optionValue => {
+          let optionElem = document.createElement('option');
+          optionElem.value = optionValue;
+          optionElem.textContent = optionValue;
+          otherTableSelect.appendChild(optionElem);
+      });
+    }
+
   </script>
 </head>
 <body>
