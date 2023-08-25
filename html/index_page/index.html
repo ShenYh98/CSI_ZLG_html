@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
   <style>
     body {
         margin: 0;
@@ -11,12 +12,12 @@
         height: 100vh;
     }
     .container {
-        height: 90%; /* Ê¹ÓÃ°Ù·Ö±ÈÀ´ÉèÖÃ¿í¶È */
-        max-height: 1400px; /* ÉèÖÃ×î´ó¿í¶È */
-        width: 70%; /* Ê¹ÓÃ°Ù·Ö±ÈÀ´ÉèÖÃ¿í¶È */
-        max-width: 2100px; /* ÉèÖÃ×î´ó¿í¶È */
+        height: 90%; /* ä½¿ç”¨ç™¾åˆ†æ¯”æ¥è®¾ç½®å®½åº¦ */
+        max-height: 1400px; /* è®¾ç½®æœ€å¤§å®½åº¦ */
+        width: 70%; /* ä½¿ç”¨ç™¾åˆ†æ¯”æ¥è®¾ç½®å®½åº¦ */
+        max-width: 2100px; /* è®¾ç½®æœ€å¤§å®½åº¦ */
         background-color: #000000;
-        margin: 0 auto; /* ¾ÓÖĞÏÔÊ¾ */
+        margin: 0 auto; /* å±…ä¸­æ˜¾ç¤º */
         padding: 20px;
     }
 
@@ -139,7 +140,7 @@
     }
   </style>
   <script>
-    // ui½»»¥Âß¼­
+    // uiäº¤äº’é€»è¾‘
     window.addEventListener('DOMContentLoaded', function() {
       const btnGuide = document.querySelector('#guide-btn');
       const collapseGuide = document.querySelector('.guide-collapse');
@@ -149,7 +150,7 @@
       const deviceTable = document.querySelector('.device-table');
       const channelTable = document.querySelector('.channel-table');
       
-      // µ¼º½±í¸ñÏÔÊ¾
+      // å¯¼èˆªè¡¨æ ¼æ˜¾ç¤º
       btnGuide.addEventListener('click', function() {
         paramForm.style.display = 'none';
         deviceTable.style.display = 'none';
@@ -163,21 +164,21 @@
         collapsedContentGuide.style.display = 'block';
       });
 
-      // ¿ªÊ¼Ïòµ¼->»ù´¡²ÎÊı
+      // å¼€å§‹å‘å¯¼->åŸºç¡€å‚æ•°
       const baseParam = document.querySelector('.base_param');
       baseParam.addEventListener('click', function() {
         paramForm.style.display = 'block';
         deviceTable.style.display = 'none';
         channelTable.style.display = 'none';
       });
-      // ¿ªÊ¼Ïòµ¼->Éè±¸¹ÜÀí
+      // å¼€å§‹å‘å¯¼->è®¾å¤‡ç®¡ç†
       const deviceMamage = document.querySelector('.device_mamage');
       deviceMamage.addEventListener('click', function() {
         paramForm.style.display = 'none';
         deviceTable.style.display = 'block';
         channelTable.style.display = 'none';
       });
-      // ¿ªÊ¼Ïòµ¼->Í¨µÀ¹ÜÀí
+      // å¼€å§‹å‘å¯¼->é€šé“ç®¡ç†
       const channelMamage = document.querySelector('.channel_mamage');
       channelMamage.addEventListener('click', function() {
         paramForm.style.display = 'none';
@@ -192,7 +193,7 @@
 
       const deviceActivityTable = document.querySelector('.device-activity-table');
 
-      // Éè±¸¼à¿Ø±í¸ñÏÔÊ¾
+      // è®¾å¤‡ç›‘æ§è¡¨æ ¼æ˜¾ç¤º
       btnDevMonitor.addEventListener('click', function() {
         paramForm.style.display = 'none';
         deviceTable.style.display = 'none';
@@ -210,16 +211,16 @@
       });
     });
 
-    // ¶¨ÒåÉè±¸±í¸ñºÍÍ¨µÀ±í¸ñµÄÊı¾İ»ñÈ¡URL
+    // å®šä¹‰è®¾å¤‡è¡¨æ ¼å’Œé€šé“è¡¨æ ¼çš„æ•°æ®è·å–URL
     const Url = "http://192.168.1.136:9000/api";
-    // Ò³Ãæ¼ÓÔØÍê³ÉÊ±ÇëÇóÊı¾İ²¢Ìî³ä±í¸ñ
+    // é¡µé¢åŠ è½½å®Œæˆæ—¶è¯·æ±‚æ•°æ®å¹¶å¡«å……è¡¨æ ¼
     window.onload = function() {
       var requestData_getDevTable = {
         taskID: 3,
         taskName: "getDevTable",
         responseTime: 1
       };
-      // ÇëÇóÉè±¸±í¸ñµÄÊı¾İ
+      // è¯·æ±‚è®¾å¤‡è¡¨æ ¼çš„æ•°æ®
       fetch(Url, {
         method: "POST",
         body: JSON.stringify(requestData_getDevTable)
@@ -228,13 +229,13 @@
         return response.json();
       })
       .then(data => {
-        console.log("getDevTable:", data.data);  // ´òÓ¡½âÎöºóµÄÏìÓ¦Êı¾İ
+        console.log("getDevTable:", data.data);  // æ‰“å°è§£æåçš„å“åº”æ•°æ®
         const parsedData = JSON.parse(data.data);
         fillDeviceTable(parsedData.data.table);
       })
       .catch(error => {
-        // ´¦ÀíÇëÇó´íÎó
-        console.log("ÇëÇóÊ§°Ü:", error);
+        // å¤„ç†è¯·æ±‚é”™è¯¯
+        console.log("è¯·æ±‚å¤±è´¥:", error);
       });
 
       var requestData_getChannelTable = {
@@ -242,7 +243,7 @@
         taskName: "getChannelTable",
         responseTime: 1
       };
-      // ÇëÇóÍ¨µÀ±í¸ñµÄÊı¾İ
+      // è¯·æ±‚é€šé“è¡¨æ ¼çš„æ•°æ®
       fetch(Url, {
         method: "POST",
         body: JSON.stringify(requestData_getChannelTable)
@@ -251,19 +252,19 @@
         return response.json();
       })
       .then(data => {
-        console.log("getChannelTable:", data.data);  // ´òÓ¡½âÎöºóµÄÏìÓ¦Êı¾İ
+        console.log("getChannelTable:", data.data);  // æ‰“å°è§£æåçš„å“åº”æ•°æ®
         const parsedData = JSON.parse(data.data);
         fillChannelTable(parsedData.data.table)
       })
       .catch(error => {
-            // ´¦ÀíÇëÇó´íÎó
-            console.log("ÇëÇóÊ§°Ü:", error);
+            // å¤„ç†è¯·æ±‚é”™è¯¯
+            console.log("è¯·æ±‚å¤±è´¥:", error);
       });
     }
-    // Ìî³äÉè±¸±í¸ñ
+    // å¡«å……è®¾å¤‡è¡¨æ ¼
     function fillDeviceTable(tableData) {
       const deviceList = document.getElementById('deviceList');
-      deviceList.innerHTML = ''; // Çå¿ÕÏÖÓĞÊı¾İ
+      deviceList.innerHTML = ''; // æ¸…ç©ºç°æœ‰æ•°æ®
 
       tableData.forEach((row, index) => {
           const tr = document.createElement('tr');
@@ -283,20 +284,20 @@
 
           deviceList.appendChild(tr);
 
-          // Ìí¼ÓÊı¾İµ½Íâ²¿Êı×édevices
+          // æ·»åŠ æ•°æ®åˆ°å¤–éƒ¨æ•°ç»„devices
           devices.push(row);
 
-          // Ìí¼ÓDevNameµ½DevNameList
+          // æ·»åŠ DevNameåˆ°DevNameList
           if (!PCSdevNameList.includes(row.name)) {
               PCSdevNameList.push(row.name);
-              updateDevName(PCSdevNameList);  // 3. ¸üĞÂÁíÒ»¸ö±íµÄÑ¡Ïî
+              updateDevName(PCSdevNameList);  // 3. æ›´æ–°å¦ä¸€ä¸ªè¡¨çš„é€‰é¡¹
           }
       });
     }
-    // Ìî³äÍ¨µÀ±í¸ñ
+    // å¡«å……é€šé“è¡¨æ ¼
     function fillChannelTable(tableData) {
       const channelList = document.getElementById('channelList');
-      channelList.innerHTML = ''; // Çå¿ÕÏÖÓĞÊı¾İ
+      channelList.innerHTML = ''; // æ¸…ç©ºç°æœ‰æ•°æ®
 
       tableData.forEach((row, index) => {
           const tr = document.createElement('tr');
@@ -314,16 +315,16 @@
 
           channelList.appendChild(tr);
 
-          // Ìí¼ÓportNameµ½portNameList
+          // æ·»åŠ portNameåˆ°portNameList
           if (!portNameList.includes(row.portName)) {
               portNameList.push(row.portName);
-              updateChannelName(portNameList);  // 3. ¸üĞÂÁíÒ»¸ö±íµÄÑ¡Ïî
+              updateChannelName(portNameList);  // 3. æ›´æ–°å¦ä¸€ä¸ªè¡¨çš„é€‰é¡¹
           }
       });
     }
 
-    // Éè±¸ÔöÉ¾¸Ä²é±íµ¥Âß¼­
-    let PCSdevNameList = [];  // ¶¨ÒåÍâ²¿È«¾ÖÁĞ±í
+    // è®¾å¤‡å¢åˆ æ”¹æŸ¥è¡¨å•é€»è¾‘
+    let PCSdevNameList = [];  // å®šä¹‰å¤–éƒ¨å…¨å±€åˆ—è¡¨
     let devices = [];
     window.addEventListener('DOMContentLoaded', function() {
       const addBtn = document.getElementById("addBtn");
@@ -352,17 +353,21 @@
       deleteBtn.addEventListener("click", function() {
         const checkboxes = deviceList.querySelectorAll('input[type="checkbox"]:checked');
 
+        let delList = [];
+
         checkboxes.forEach(function(checkbox) {
           const row = checkbox.parentNode.parentNode;
           const index = row.rowIndex - 1;
 
-          // »ñÈ¡Ã¿Ò»ĞĞµÄÖµ£¬Õâ¿ÉÄÜĞèÒªÄã¸ù¾İÊµ¼ÊµÄHTML½á¹¹½øĞĞĞŞ¸Ä
+          // è·å–æ¯ä¸€è¡Œçš„å€¼ï¼Œè¿™å¯èƒ½éœ€è¦ä½ æ ¹æ®å®é™…çš„HTMLç»“æ„è¿›è¡Œä¿®æ”¹
           let currentDevtName = row.children[2].textContent;
+
+          delList.push(row);
 
           devices.splice(index, 1);
           row.remove();
 
-          // ´ÓPCSdevNameListÖĞÉ¾³ı¶ÔÓ¦µÄDevtName
+          // ä»PCSdevNameListä¸­åˆ é™¤å¯¹åº”çš„DevtName
           const devtNameIndex = PCSdevNameList.indexOf(currentDevtName);
           if (devtNameIndex > -1) {
               PCSdevNameList.splice(devtNameIndex, 1);
@@ -371,15 +376,15 @@
 
         selectAllCheckbox.checked = false;
 
-        sendJsonToServer(); // ½«ÉèÖÃºÃµÄjson·¢¸ø·şÎñ¶Ë£¬·şÎñ¶ËÔÙ´¦Àí
+        sendDelJson(delList);
 
-        updateDevName(PCSdevNameList);  // ¸üĞÂÁíÒ»¸ö±íµÄÑ¡Ïî
+        updateDevName(PCSdevNameList);  // æ›´æ–°å¦ä¸€ä¸ªè¡¨çš„é€‰é¡¹
       });
 
       editBtn.addEventListener("click", function() {
         const checkboxes = deviceList.querySelectorAll('input[type="checkbox"]:checked');
         if (checkboxes.length !== 1) {
-          alert("ÇëÑ¡ÔñÒ»¸öÉè±¸½øĞĞ±à¼­");
+          alert("è¯·é€‰æ‹©ä¸€ä¸ªè®¾å¤‡è¿›è¡Œç¼–è¾‘");
           return;
         }
         const row = checkboxes[0].parentNode.parentNode;
@@ -406,11 +411,11 @@
         const sn = snInput.value.trim();
         const deviceStatus = deviceStatusInput.value.trim();
 
-        // »ñÈ¡DevtNameÖµ
+        // è·å–DevtNameå€¼
         let currentDevtName = document.getElementById('deviceName').value;
 
         if (name === "" || communicationAddress === "" || sn === "" || deviceStatus === "") {
-          alert("ÇëÌîĞ´ÍêÕûÉè±¸ĞÅÏ¢");
+          alert("è¯·å¡«å†™å®Œæ•´è®¾å¤‡ä¿¡æ¯");
           return;
         }
 
@@ -427,25 +432,31 @@
 
         const checkboxes = deviceList.querySelectorAll('input[type="checkbox"]:checked');
         if (checkboxes.length === 1) {
-          // ±à¼­Ä£Ê½
+          // ç¼–è¾‘æ¨¡å¼
           const row = checkboxes[0].parentNode.parentNode;
           const index = row.rowIndex - 1;
+
+          const oldDevice = devices[index];
+
           devices[index] = newDevice;
           updateTableRow(row, newDevice);
+
+          sendEditJson(newDevice, oldDevice);
         } else {
-          // ĞÂÔöÄ£Ê½
+          // æ–°å¢æ¨¡å¼
           devices.push(newDevice);
           const newRow = generateTableRow(newDevice);
           deviceList.appendChild(newRow);
 
-          // Ìí¼ÓDevNameµ½DevNameList
+          // æ·»åŠ DevNameåˆ°DevNameList
           if (!PCSdevNameList.includes(currentDevtName)) {
               PCSdevNameList.push(currentDevtName);
-              updateDevName(PCSdevNameList);  // 3. ¸üĞÂÁíÒ»¸ö±íµÄÑ¡Ïî
+              updateDevName(PCSdevNameList);  // 3. æ›´æ–°å¦ä¸€ä¸ªè¡¨çš„é€‰é¡¹
           }
+
+          sendSaveJson(newDevice);
         }
 
-        sendJsonToServer(); // ½«ÉèÖÃºÃµÄjson·¢¸ø·şÎñ¶Ë£¬·şÎñ¶ËÔÙ´¦Àí
         clearFormInputs();
         hidePopupForm();
       });
@@ -576,21 +587,170 @@
             body: JSON.stringify(requestData)
         })
         .then(response => {
-            // ´¦ÀíÏìÓ¦½á¹û
+            // å¤„ç†å“åº”ç»“æœ
             if (response.ok) {
-                alert("±£´æ³É¹¦£¡");
+                alert("ä¿å­˜æˆåŠŸï¼");
             } else {
-                // µÇÂ¼Ê§°Ü»òÖØÖÃÊ§°Ü£¬µ¯³öÌáÊ¾
-                alert("±£´æÊ§°Ü£¡");
+                // ç™»å½•å¤±è´¥æˆ–é‡ç½®å¤±è´¥ï¼Œå¼¹å‡ºæç¤º
+                alert("ä¿å­˜å¤±è´¥ï¼");
             }
         })
         .catch(error => {
-            // ´¦ÀíÇëÇó´íÎó
-            console.log("ÇëÇóÊ§°Ü:", error);
+            // å¤„ç†è¯·æ±‚é”™è¯¯
+            console.log("è¯·æ±‚å¤±è´¥:", error);
         });
       }
 
-      // ³õÊ¼»¯±í¸ñÊı¾İ£¬¿ÉÒÔ´Óºó¶Ë»ñÈ¡Êı¾İ½øĞĞÌî³ä
+      function sendSaveJson(device) {
+        let rowData = {
+            name: device.name,
+            port: device.port,
+            protocol: device.protocol,
+            communicationAddress: device.communicationAddress,
+            category: device.category,
+            model: device.model,
+            sn: device.sn,
+            deviceStatus: device.deviceStatus
+        };
+
+        var requestData = {
+            taskID: 5,
+            taskName: "DevSave",
+            responseTime: 1,
+            data: rowData
+        };
+
+        console.log(requestData);
+
+        fetch(Url, {
+            method: 'POST',
+            // headers: {
+            //     'Content-Type': 'application/json'
+            // },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => {
+            // å¤„ç†å“åº”ç»“æœ
+            if (response.ok) {
+                alert("ä¿å­˜æˆåŠŸï¼");
+            } else {
+                // ç™»å½•å¤±è´¥æˆ–é‡ç½®å¤±è´¥ï¼Œå¼¹å‡ºæç¤º
+                alert("ä¿å­˜å¤±è´¥ï¼");
+            }
+        })
+        .catch(error => {
+            // å¤„ç†è¯·æ±‚é”™è¯¯
+            console.log("è¯·æ±‚å¤±è´¥:", error);
+        });
+      }
+
+      function sendEditJson(device, oldDevice) {
+        let rowData = {
+            name: device.name,
+            port: device.port,
+            protocol: device.protocol,
+            communicationAddress: device.communicationAddress,
+            category: device.category,
+            model: device.model,
+            sn: device.sn,
+            deviceStatus: device.deviceStatus
+        };
+
+        let oldRowData = {
+            name: oldDevice.name,
+            port: oldDevice.port,
+            protocol: oldDevice.protocol,
+            communicationAddress: oldDevice.communicationAddress,
+            category: oldDevice.category,
+            model: oldDevice.model,
+            sn: oldDevice.sn,
+            deviceStatus: oldDevice.deviceStatus
+        };
+
+        var requestData = {
+            taskID: 6,
+            taskName: "DevEdit",
+            responseTime: 1,
+            data: {
+              "newdata" : rowData,
+              "olddata" : oldRowData
+            }
+        };
+
+        console.log(requestData);
+
+        fetch(Url, {
+            method: 'POST',
+            // headers: {
+            //     'Content-Type': 'application/json'
+            // },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => {
+            // å¤„ç†å“åº”ç»“æœ
+            if (response.ok) {
+                alert("ä¿å­˜æˆåŠŸï¼");
+            } else {
+                // ç™»å½•å¤±è´¥æˆ–é‡ç½®å¤±è´¥ï¼Œå¼¹å‡ºæç¤º
+                alert("ä¿å­˜å¤±è´¥ï¼");
+            }
+        })
+        .catch(error => {
+            // å¤„ç†è¯·æ±‚é”™è¯¯
+            console.log("è¯·æ±‚å¤±è´¥:", error);
+        });
+      }
+
+      function sendDelJson(delList) {
+        let data = [];
+        delList.forEach(function(row) {
+            let rowData = {
+                name: row.children[2].textContent, // æ ¹æ®ä½ çš„è¡¨æ ¼ç»“æ„ä¿®æ”¹ç´¢å¼•
+                port: row.children[3].textContent,
+                protocol: row.children[4].textContent,
+                communicationAddress: row.children[5].textContent,
+                category: row.children[6].textContent,
+                model: row.children[7].textContent,
+                sn: row.children[8].textContent,
+                deviceStatus: row.children[9].textContent
+            };
+            data.push(rowData);
+        });
+
+        var requestData = {
+            taskID: 7,
+            taskName: "DevDel",
+            responseTime: 1,
+            data: {
+              "table" : data
+            }
+        };
+
+        console.log(requestData);
+
+        fetch(Url, {
+            method: 'POST',
+            // headers: {
+            //     'Content-Type': 'application/json'
+            // },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => {
+            // å¤„ç†å“åº”ç»“æœ
+            if (response.ok) {
+                alert("ä¿å­˜æˆåŠŸï¼");
+            } else {
+                // ç™»å½•å¤±è´¥æˆ–é‡ç½®å¤±è´¥ï¼Œå¼¹å‡ºæç¤º
+                alert("ä¿å­˜å¤±è´¥ï¼");
+            }
+        })
+        .catch(error => {
+            // å¤„ç†è¯·æ±‚é”™è¯¯
+            console.log("è¯·æ±‚å¤±è´¥:", error);
+        });
+      }
+
+      // åˆå§‹åŒ–è¡¨æ ¼æ•°æ®ï¼Œå¯ä»¥ä»åç«¯è·å–æ•°æ®è¿›è¡Œå¡«å……
       devices = [];
 
       devices.forEach(function(device) {
@@ -598,7 +758,7 @@
         deviceList.appendChild(row);
       });
     });
-    // ´´½¨Ò»¸öº¯ÊıÀ´¸üĞÂÁíÒ»¸ö±íµÄÑ¡ÏîD
+    // åˆ›å»ºä¸€ä¸ªå‡½æ•°æ¥æ›´æ–°å¦ä¸€ä¸ªè¡¨çš„é€‰é¡¹D
     function updateDevName(optionsList) {
       let otherTableContent = document.getElementById('devmonitor-collapsed-PCS-content');
 
@@ -610,13 +770,12 @@
         let liElem = document.createElement('li');
         liElem.textContent = optionValue;
 
-        // ÎªÃ¿¸öliÔªËØÌí¼Óµã»÷ÊÂ¼ş¼àÌıÆ÷
+        // ä¸ºæ¯ä¸ªliå…ƒç´ æ·»åŠ ç‚¹å‡»äº‹ä»¶ç›‘å¬å™¨
         liElem.addEventListener('click', function(event) {
-          // µ¥µãÉè±¸·¢ËÍhttpÇëÇó£¬ºó¶ËÊÕµ½ÇëÇóºó£¬Í¨¹ıwebsocket·µ»ØÊµÊ±Êı¾İ
+          // å•ç‚¹è®¾å¤‡å‘é€httpè¯·æ±‚ï¼Œåç«¯æ”¶åˆ°è¯·æ±‚åï¼Œé€šè¿‡websocketè¿”å›å®æ—¶æ•°æ®
           console.log('Clicked:', event.target.textContent);
 
           var requestData = {
-              taskID: 5,
               taskName: "getRTData",
               responseTime: 3,
               data: {
@@ -634,17 +793,17 @@
               body: JSON.stringify(requestData)
           })
           .then(response => {
-              // ´¦ÀíÏìÓ¦½á¹û
+              // å¤„ç†å“åº”ç»“æœ
               if (response.ok) {
-                  alert("²É¼¯Êı¾İÉÏ´«³É¹¦£¡");
+                  alert("é‡‡é›†æ•°æ®ä¸Šä¼ æˆåŠŸï¼");
               } else {
-                  // µÇÂ¼Ê§°Ü»òÖØÖÃÊ§°Ü£¬µ¯³öÌáÊ¾
-                  alert("²É¼¯Êı¾İÉÏ´«Ê§°Ü£¡");
+                  // ç™»å½•å¤±è´¥æˆ–é‡ç½®å¤±è´¥ï¼Œå¼¹å‡ºæç¤º
+                  alert("é‡‡é›†æ•°æ®ä¸Šä¼ å¤±è´¥ï¼");
               }
           })
           .catch(error => {
-              // ´¦ÀíÇëÇó´íÎó
-              console.log("ÇëÇóÊ§°Ü:", error);
+              // å¤„ç†è¯·æ±‚é”™è¯¯
+              console.log("è¯·æ±‚å¤±è´¥:", error);
           });
         });
 
@@ -652,8 +811,8 @@
       });
     }
 
-    // Í¨µÀÔöÉ¾¸Ä²é±íµ¥Âß¼­Channel
-    let portNameList = [];  // ¶¨ÒåÍâ²¿È«¾ÖÁĞ±í
+    // é€šé“å¢åˆ æ”¹æŸ¥è¡¨å•é€»è¾‘Channel
+    let portNameList = [];  // å®šä¹‰å¤–éƒ¨å…¨å±€åˆ—è¡¨
     window.addEventListener('DOMContentLoaded', function() {
       const addBtn = document.getElementById('channel-addBtn');
       const deleteBtn = document.getElementById('channel-deleteBtn');
@@ -673,25 +832,29 @@
 
       deleteBtn.addEventListener('click', function() {
           const checkboxes = tableBody.querySelectorAll('input[type="checkbox"]:checked');
+          let deletedParams = [];
 
           checkboxes.forEach(checkbox => {
             const row = checkbox.parentNode.parentNode;
 
-            // »ñÈ¡Ã¿Ò»ĞĞµÄÖµ£¬Õâ¿ÉÄÜĞèÒªÄã¸ù¾İÊµ¼ÊµÄHTML½á¹¹½øĞĞĞŞ¸Ä
+            // è·å–æ¯ä¸€è¡Œçš„å€¼ï¼Œè¿™å¯èƒ½éœ€è¦ä½ æ ¹æ®å®é™…çš„HTMLç»“æ„è¿›è¡Œä¿®æ”¹
             let currentPortName = row.children[2].textContent;
 
             tableBody.removeChild(checkbox.closest('tr'));
         
-            // ´ÓportNameListÖĞÉ¾³ı¶ÔÓ¦µÄ
+            // æ·»åŠ è¢«åˆ é™¤çš„å‚æ•°åˆ°æ•°ç»„ä¸­
+            deletedParams.push(row);
+
+            // ä»portNameListä¸­åˆ é™¤å¯¹åº”çš„
             const PortNameIndex = portNameList.indexOf(currentPortName);
             if (PortNameIndex > -1) {
               portNameList.splice(PortNameIndex, 1);
             }
           });
 
-          sendJsonToServer();
+          sendDelJson(deletedParams);
 
-          updateChannelName(portNameList);  // ¸üĞÂÁíÒ»¸ö±íµÄÑ¡Ïî
+          updateChannelName(portNameList);  // æ›´æ–°å¦ä¸€ä¸ªè¡¨çš„é€‰é¡¹
       });
 
       editBtn.addEventListener('click', function() {
@@ -719,10 +882,11 @@
       saveBtn.addEventListener('click', function(e) {
           e.preventDefault();
 
-          // »ñÈ¡portNameÖµ
+          // è·å–portNameå€¼
           let currentPortName = document.getElementById('portName').value;
 
           if (editingRowIndex !== null) {
+              const oldRow = tableBody.children[editingRowIndex].cloneNode(true);;
               const row = tableBody.children[editingRowIndex];
               row.cells[2].textContent = document.getElementById('portName').value;
               row.cells[3].textContent = document.getElementById('port').value;
@@ -730,6 +894,8 @@
               row.cells[5].textContent = document.getElementById('dataBits').value;
               row.cells[6].textContent = document.getElementById('stopBits').value;
               row.cells[7].textContent = document.getElementById('parity').value;
+
+              sendEditJson(row, oldRow);
           } else {
               const newRow = tableBody.insertRow();
               newRow.innerHTML = `
@@ -743,14 +909,14 @@
                   <td>${document.getElementById('parity').value}</td>
               `;
 
-              // Ìí¼ÓportNameµ½portNameList
+              // æ·»åŠ portNameåˆ°portNameList
               if (!portNameList.includes(currentPortName)) {
                   portNameList.push(currentPortName);
-                  updateChannelName(portNameList);  // 3. ¸üĞÂÁíÒ»¸ö±íµÄÑ¡Ïî
+                  updateChannelName(portNameList);  // 3. æ›´æ–°å¦ä¸€ä¸ªè¡¨çš„é€‰é¡¹
               }
-          }
 
-          sendJsonToServer();
+              sendSaveJson(newRow);
+          }
 
           form.style.display = 'none';
       });
@@ -762,7 +928,7 @@
       function sendJsonToServer() {
         let data = [];
 
-        // »ñÈ¡±í¸ñÖĞµÄËùÓĞĞĞÊı¾İ
+        // è·å–è¡¨æ ¼ä¸­çš„æ‰€æœ‰è¡Œæ•°æ®
         const tableRows = tableBody.getElementsByTagName("tr");
         for (let i = 0; i < tableRows.length; i++) {
           const row = tableRows[i];
@@ -793,20 +959,161 @@
           body: JSON.stringify(requestData)
         })
           .then(response => {
-            // ´¦ÀíÏìÓ¦½á¹û
+            // å¤„ç†å“åº”ç»“æœ
             if (response.ok) {
-              alert("±£´æ³É¹¦£¡");
+              alert("ä¿å­˜æˆåŠŸï¼");
             } else {
-              alert("±£´æÊ§°Ü£¡");
+              alert("ä¿å­˜å¤±è´¥ï¼");
             }
           })
           .catch(error => {
-            // ´¦ÀíÇëÇó´íÎó
-            console.log("ÇëÇóÊ§°Ü:", error);
+            // å¤„ç†è¯·æ±‚é”™è¯¯
+            console.log("è¯·æ±‚å¤±è´¥:", error);
           });
       }
+
+      function sendSaveJson(row) {
+        let rowData = {
+            portName: row.cells[2].textContent,
+            port: row.cells[3].textContent,
+            baudRate: row.cells[4].textContent,
+            dataBits: row.cells[5].textContent,
+            stopBits: row.cells[6].textContent,
+            parity: row.cells[7].textContent
+        };
+
+        var requestData = {
+            taskID: 8,
+            taskName: "channelSave",
+            responseTime: 1,
+            data: rowData
+        };
+
+        console.log(requestData);
+
+        fetch(Url, {
+            method: 'POST',
+            // headers: {
+            //     'Content-Type': 'application/json'
+            // },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => {
+            // å¤„ç†å“åº”ç»“æœ
+            if (response.ok) {
+                alert("ä¿å­˜æˆåŠŸï¼");
+            } else {
+                // ç™»å½•å¤±è´¥æˆ–é‡ç½®å¤±è´¥ï¼Œå¼¹å‡ºæç¤º
+                alert("ä¿å­˜å¤±è´¥ï¼");
+            }
+        })
+        .catch(error => {
+            // å¤„ç†è¯·æ±‚é”™è¯¯
+            console.log("è¯·æ±‚å¤±è´¥:", error);
+        });
+      }
+
+      function sendEditJson(row, oldRow) {
+        let rowData = {
+            portName: row.cells[2].textContent,
+            port: row.cells[3].textContent,
+            baudRate: row.cells[4].textContent,
+            dataBits: row.cells[5].textContent,
+            stopBits: row.cells[6].textContent,
+            parity: row.cells[7].textContent
+        };
+
+        let oldRowData = {
+            portName: oldRow.cells[2].textContent,
+            port: oldRow.cells[3].textContent,
+            baudRate: oldRow.cells[4].textContent,
+            dataBits: oldRow.cells[5].textContent,
+            stopBits: oldRow.cells[6].textContent,
+            parity: oldRow.cells[7].textContent
+        };
+
+        var requestData = {
+            taskID: 9,
+            taskName: "ChannelEdit",
+            responseTime: 1,
+            data: {
+              "newdata" : rowData,
+              "olddata" : oldRowData
+            }
+        };
+
+        console.log(requestData);
+
+        fetch(Url, {
+            method: 'POST',
+            // headers: {
+            //     'Content-Type': 'application/json'
+            // },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => {
+            // å¤„ç†å“åº”ç»“æœ
+            if (response.ok) {
+                alert("ä¿å­˜æˆåŠŸï¼");
+            } else {
+                // ç™»å½•å¤±è´¥æˆ–é‡ç½®å¤±è´¥ï¼Œå¼¹å‡ºæç¤º
+                alert("ä¿å­˜å¤±è´¥ï¼");
+            }
+        })
+        .catch(error => {
+            // å¤„ç†è¯·æ±‚é”™è¯¯
+            console.log("è¯·æ±‚å¤±è´¥:", error);
+        });
+      }
+
+      function sendDelJson(delList) {
+        let data = [];
+        delList.forEach(function(row) {
+            let rowData = {
+              portName: row.children[2].textContent,
+              port: row.children[3].textContent,
+              baudRate: row.children[4].textContent,
+              dataBits: row.children[5].textContent,
+              stopBits: row.children[6].textContent,
+              parity: row.children[7].textContent
+            };
+            data.push(rowData);
+        });
+
+        var requestData = {
+            taskID: 10,
+            taskName: "ChannelDel",
+            responseTime: 1,
+            data: {
+              "table" : data
+            }
+        };
+
+        console.log(requestData);
+
+        fetch(Url, {
+            method: 'POST',
+            // headers: {
+            //     'Content-Type': 'application/json'
+            // },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => {
+            // å¤„ç†å“åº”ç»“æœ
+            if (response.ok) {
+                alert("ä¿å­˜æˆåŠŸï¼");
+            } else {
+                // ç™»å½•å¤±è´¥æˆ–é‡ç½®å¤±è´¥ï¼Œå¼¹å‡ºæç¤º
+                alert("ä¿å­˜å¤±è´¥ï¼");
+            }
+        })
+        .catch(error => {
+            // å¤„ç†è¯·æ±‚é”™è¯¯
+            console.log("è¯·æ±‚å¤±è´¥:", error);
+        });
+      }
     });
-    // ´´½¨Ò»¸öº¯ÊıÀ´¸üĞÂÁíÒ»¸ö±íµÄÑ¡Ïî
+    // åˆ›å»ºä¸€ä¸ªå‡½æ•°æ¥æ›´æ–°å¦ä¸€ä¸ªè¡¨çš„é€‰é¡¹
     function updateChannelName(optionsList) {
       let otherTableSelect = document.getElementById('channel');
 
@@ -829,51 +1136,51 @@
     <header></header>
     <nav>
       <ul>
-        <button id="guide-btn">¿ªÊ¼Ïòµ¼</button>
-        <button>¸ÅÀÀ</button>
-        <button id="devmonitor-btn">Éè±¸¼à¿Ø</button>
-        <button>ÀúÊ·²éÑ¯</button>
-        <button>ÉèÖÃ</button>
-        <button>Î¬»¤</button>
+        <button id="guide-btn">å¼€å§‹å‘å¯¼</button>
+        <button>æ¦‚è§ˆ</button>
+        <button id="devmonitor-btn">è®¾å¤‡ç›‘æ§</button>
+        <button>å†å²æŸ¥è¯¢</button>
+        <button>è®¾ç½®</button>
+        <button>ç»´æŠ¤</button>
       </ul>
     </nav>
     <main>
       <div class="nav-bar">
-          <!-- ¿ªÊ¼Ïòµ¼ -->
+          <!-- å¼€å§‹å‘å¯¼ -->
           <div class="guide-collapse">
-            ¿ªÊ¼Ïòµ¼
+            å¼€å§‹å‘å¯¼
             <div class="guide-collapsed-content">
-              <div class="base_param"> <li> »ù±¾²ÎÊı<br> </li> </div>
-              <div class="channel_mamage"> <li> Í¨µÀ¹ÜÀí </li> </div>
-              <div class="device_mamage"> <li> Éè±¸¹ÜÀí </li> </div>
+              <div class="base_param"> <li> åŸºæœ¬å‚æ•°<br> </li> </div>
+              <div class="channel_mamage"> <li> é€šé“ç®¡ç† </li> </div>
+              <div class="device_mamage"> <li> è®¾å¤‡ç®¡ç† </li> </div>
             </div>
           </div>
 
-          <!-- Éè±¸¼à¿Ø -->
+          <!-- è®¾å¤‡ç›‘æ§ -->
           <div class="devmonitor-collapse-PCS">
             PCS
             <div class="devmonitor-collapsed-PCS-content" id="devmonitor-collapsed-PCS-content">
-              <!-- ¶¯Ì¬ÏÔÊ¾Éè±¸Ãû -->
+              <!-- åŠ¨æ€æ˜¾ç¤ºè®¾å¤‡å -->
             </div>
           </div>
       </div>
       <div class="content">
-          <!-- Ö÷´°¿ÚÏÔÊ¾ -->
+          <!-- ä¸»çª—å£æ˜¾ç¤º -->
           <div class="param-form" id="param-form">
             <form id="ipConfigForm">
-              <label for="ipAddress">IPµØÖ· </label>
+              <label for="ipAddress">IPåœ°å€ </label>
               <input type="text" id="ipAddress" name="ipAddress"><br><br>
           
-              <label for="subnetMask">×ÓÍøÑÚÂë </label>
+              <label for="subnetMask">å­ç½‘æ©ç  </label>
               <input type="text" id="subnetMask" name="subnetMask"><br><br>
           
-              <label for="defaultGateway">Ä¬ÈÏÍø¹Ø </label>
+              <label for="defaultGateway">é»˜è®¤ç½‘å…³ </label>
               <input type="text" id="defaultGateway" name="defaultGateway"><br><br>
           
-              <label for="primaryDns">Ê×Ñ¡dns </label>
+              <label for="primaryDns">é¦–é€‰dns </label>
               <input type="text" id="primaryDns" name="primaryDns"><br><br>
           
-              <label for="secondaryDns">±¸ÓÃdns</label>
+              <label for="secondaryDns">å¤‡ç”¨dns</label>
               <input type="text" id="secondaryDns" name="secondaryDns"><br><br>
           
               <input type="button" value="Submit" onclick="submitForm()">
@@ -881,22 +1188,22 @@
           </div>
 
           <div class="device-table" id="device-table">
-            <button id="addBtn">Ôö¼Ó</button>
-            <button id="deleteBtn">É¾³ı</button>
-            <button id="editBtn">ĞŞ¸Ä</button>
+            <button id="addBtn">å¢åŠ </button>
+            <button id="deleteBtn">åˆ é™¤</button>
+            <button id="editBtn">ä¿®æ”¹</button>
             <table>
               <thead>
                 <tr>
-                  <th><input type="checkbox" id="selectAll" />È«Ñ¡</th>
-                  <th>ĞòºÅ</th>
-                  <th>Éè±¸Ãû³Æ</th>
-                  <th>Í¨µÀ</th>
-                  <th>¹æÔ¼</th>
-                  <th>Í¨ĞÅµØÖ·</th>
-                  <th>Àà±ğ</th>
-                  <th>ĞÍºÅ</th>
+                  <th><input type="checkbox" id="selectAll" />å…¨é€‰</th>
+                  <th>åºå·</th>
+                  <th>è®¾å¤‡åç§°</th>
+                  <th>é€šé“</th>
+                  <th>è§„çº¦</th>
+                  <th>é€šä¿¡åœ°å€</th>
+                  <th>ç±»åˆ«</th>
+                  <th>å‹å·</th>
                   <th>SN</th>
-                  <th>Éè±¸×´Ì¬</th>
+                  <th>è®¾å¤‡çŠ¶æ€</th>
                 </tr>
               </thead>
               <tbody id="deviceList">
@@ -905,20 +1212,20 @@
           </div>
 
           <div class="channel-table" id="channel-table">
-            <button id="channel-addBtn">Ôö¼Ó</button>
-            <button id="channel-deleteBtn">É¾³ı</button>
-            <button id="channel-editBtn">ĞŞ¸Ä</button>
+            <button id="channel-addBtn">å¢åŠ </button>
+            <button id="channel-deleteBtn">åˆ é™¤</button>
+            <button id="channel-editBtn">ä¿®æ”¹</button>
             <table>
               <thead>
                 <tr>
-                  <th><input type="checkbox" id="channel-selectAll" />È«Ñ¡</th>
-                  <th>ĞòºÅ</th>
-                  <th>´®¿ÚÃû</th>
-                  <th>´®¿Ú</th>
-                  <th>²¨ÌØÂÊ</th>
-                  <th>Êı¾İÎ»</th>
-                  <th>Í£Ö¹Î»</th>
-                  <th>Ğ£ÑéÎ»</th>
+                  <th><input type="checkbox" id="channel-selectAll" />å…¨é€‰</th>
+                  <th>åºå·</th>
+                  <th>ä¸²å£å</th>
+                  <th>ä¸²å£</th>
+                  <th>æ³¢ç‰¹ç‡</th>
+                  <th>æ•°æ®ä½</th>
+                  <th>åœæ­¢ä½</th>
+                  <th>æ ¡éªŒä½</th>
                 </tr>
               </thead>
               <tbody id="channelList">
@@ -930,10 +1237,10 @@
             <table>
               <thead>
                 <tr>
-                  <th>ĞòºÅ</th>
-                  <th>Ô´Ãû³Æ</th>
-                  <th>Öµ</th>
-                  <th>µ¥Î»</th>
+                  <th>åºå·</th>
+                  <th>æºåç§°</th>
+                  <th>å€¼</th>
+                  <th>å•ä½</th>
                 </tr>
               </thead>
               <tbody id="deviceList">
@@ -941,82 +1248,94 @@
             </table>
           </div>
 
-          <!-- ÕâÀïµ¯´°ÊÂ¼şµÄÄÚÈİ -->
+          <!-- è¿™é‡Œå¼¹çª—äº‹ä»¶çš„å†…å®¹ -->
           <div id="popupForm">
-            <input type="text" id="deviceName" placeholder="Éè±¸Ãû³Æ" />
-            <!-- <input type="text" id="port" placeholder="Í¨µÀ" /> -->
+            <label for="deviceName">è®¾å¤‡åç§°ï¼š</label>
+            <input type="text" id="deviceName" placeholder="è®¾å¤‡åç§°" />
+            <!-- <input type="text" id="port" placeholder="é€šé“" /> -->
 
-            <label for="channel">Í¨µÀ: </label>
+            <label for="channel">é€šé“: </label>
             <select id="channel" name="channel">
-              <!-- Ìí¼Ó¸ü¶àÑ¡Ïî -->
+              <!-- æ·»åŠ æ›´å¤šé€‰é¡¹ -->
             </select><br><br>
 
-            <label for="protocol">¹æÔ¼: </label>
+            <label for="protocol">è§„çº¦: </label>
             <select id="protocol" name="protocol">
               <option value="modbus">modbus</option>
-              <!-- Ìí¼Ó¸ü¶àÑ¡Ïî -->
+              <!-- æ·»åŠ æ›´å¤šé€‰é¡¹ -->
             </select><br><br>
 
-            <input type="text" id="communicationAddress" placeholder="Í¨ĞÅµØÖ·" />
+            <label for="communicationAddress">é€šä¿¡åœ°å€ï¼š</label>
+            <input type="text" id="communicationAddress" placeholder="é€šä¿¡åœ°å€" />
 
-            <label for="category">Àà±ğ£º</label>
+            <label for="category">ç±»åˆ«ï¼š</label>
             <select id="category" name="category">
               <option value="pcs">pcs</option>
               <option value="bms">bms</option>
-              <!-- Ìí¼Ó¸ü¶àÑ¡Ïî -->
+              <!-- æ·»åŠ æ›´å¤šé€‰é¡¹ -->
             </select><br><br>
 
-            <input type="text" id="model" placeholder="ĞÍºÅ" />
+            <label for="model">å‹å·ï¼š</label>
+            <input type="text" id="model" placeholder="å‹å·" />
 
+            <label for="sn">SNï¼š</label>
             <input type="text" id="sn" placeholder="SN" />
-            <input type="text" id="deviceStatus" placeholder="Éè±¸×´Ì¬" />
-            <button id="saveBtn">±£´æ</button>
-            <button id="cancelBtn">È¡Ïû</button>
+
+            <label for="deviceStatus">è®¾å¤‡çŠ¶æ€ï¼š</label>
+            <input type="text" id="deviceStatus" placeholder="è®¾å¤‡çŠ¶æ€" />
+
+            <button id="saveBtn">ä¿å­˜</button>
+            <button id="cancelBtn">å–æ¶ˆ</button>
           </div>
 
           <div id="channel-form">
-            <label for="portName">´®¿ÚÃû£º</label>
+            <label for="portName">ä¸²å£åï¼š</label>
             <input type="text" id="portName" name="portName"><br><br>
 
-            <label for="port">´®¿Ú£º</label>
+            <label for="port">ä¸²å£ï¼š</label>
             <select id="port" name="port">
-              <option value="com1">COM1</option>
-              <option value="com2">COM2</option>
-              <option value="com3">COM3</option>
-              <!-- Ìí¼Ó¸ü¶àÑ¡Ïî -->
+              <option value="RS485-1">RS485-1</option>
+              <option value="RS485-2">RS485-2</option>
+              <option value="RS485-3">RS485-3</option>
+              <option value="RS485-4">RS485-4</option>
+              <option value="RS485-5">RS485-5</option>
+              <option value="RS485-6">RS485-6</option>
+              <option value="RS485-7">RS485-7</option>
+              <option value="RS485-8">RS485-8</option>
+              <!-- æ·»åŠ æ›´å¤šé€‰é¡¹ -->
             </select><br><br>
 
-            <label for="baudRate">²¨ÌØÂÊ£º</label>
+            <label for="baudRate">æ³¢ç‰¹ç‡ï¼š</label>
             <select id="baudRate" name="baudRate">
               <option value="9600">9600</option>
               <option value="19200">19200</option>
               <option value="38400">38400</option>
-              <!-- Ìí¼Ó¸ü¶àÑ¡Ïî -->
+              <!-- æ·»åŠ æ›´å¤šé€‰é¡¹ -->
             </select><br><br>
 
-            <label for="dataBits">Êı¾İÎ»£º</label>
+            <label for="dataBits">æ•°æ®ä½ï¼š</label>
             <select id="dataBits" name="dataBits">
               <option value="6">6</option>
               <option value="7">7</option>
               <option value="8">8</option>
             </select><br><br>
             
-            <label for="stopBits">Í£Ö¹Î»£º</label>
+            <label for="stopBits">åœæ­¢ä½ï¼š</label>
             <select id="stopBits" name="stopBits">
               <option value="1">1</option>
               <option value="1.5">1.5</option>
               <option value="2">2</option>
             </select><br><br>
 
-            <label for="parity">Ğ£ÑéÎ»£º</label>
+            <label for="parity">æ ¡éªŒä½ï¼š</label>
             <select id="parity" name="parity">
-              <option value="none">ÎŞĞ£Ñé</option>
-              <option value="even">Å¼Ğ£Ñé</option>
-              <option value="odd">ÆæĞ£Ñé</option>
+              <option value="N">æ— æ ¡éªŒ</option>
+              <option value="E">å¶æ ¡éªŒ</option>
+              <option value="O">å¥‡æ ¡éªŒ</option>
             </select><br><br>
 
-            <button id="channel-saveBtn">±£´æ</button>
-            <button id="channel-cancelBtn">È¡Ïû</button>
+            <button id="channel-saveBtn">ä¿å­˜</button>
+            <button id="channel-cancelBtn">å–æ¶ˆ</button>
           </div>
       </div>
     </main>

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>µÇÂ¼½çÃæ</title>
+    <meta charset="UTF-8" />
+    <title>ç™»å½•ç•Œé¢</title>
     <style>
         body {
             display: flex;
@@ -17,8 +18,8 @@
         }
 
         form {
-            width: 300px; /* ÉèÖÃformµÄ¿í¶È */
-            margin: 0 auto; /* Ê¹ÓÃmarginÊôĞÔ½«form¾ÓÖĞ¶ÔÆë */
+            width: 300px; /* è®¾ç½®formçš„å®½åº¦ */
+            margin: 0 auto; /* ä½¿ç”¨marginå±æ€§å°†formå±…ä¸­å¯¹é½ */
         }
 
         label,
@@ -47,10 +48,10 @@
                 }
             };
 
-            button1.disabled = true; // ½ûÓÃ°´Å¥
+            button1.disabled = true; // ç¦ç”¨æŒ‰é’®
             button2.disabled = true;
     
-            fetch('http://192.168.1.136:9000/api', {
+            fetch('http://192.168.8.113:9000/api', {
                 method: 'POST',
                 // headers: {
                 //     'Content-Type': 'application/json'
@@ -58,27 +59,27 @@
                 body: JSON.stringify(requestData)
             })
             .then(response => {
-                button1.disabled = false; // ÆôÓÃ°´Å¥
+                button1.disabled = false; // å¯ç”¨æŒ‰é’®
                 button2.disabled = false;
-                // ´¦ÀíÏìÓ¦½á¹û
+                // å¤„ç†å“åº”ç»“æœ
                 if (response.ok) {
                     successCallback();
                 } else {
-                    // µÇÂ¼Ê§°Ü»òÖØÖÃÊ§°Ü£¬µ¯³öÌáÊ¾
-                    alert("ÓÃ»§Ãû»òÃÜÂë²»ÕıÈ·£¡");
+                    // ç™»å½•å¤±è´¥æˆ–é‡ç½®å¤±è´¥ï¼Œå¼¹å‡ºæç¤º
+                    alert("ç”¨æˆ·åæˆ–å¯†ç ä¸æ­£ç¡®ï¼");
                 }
             })
             .catch(error => {
-                button1.disabled = false; // ÆôÓÃ°´Å¥
+                button1.disabled = false; // å¯ç”¨æŒ‰é’®
                 button2.disabled = false;
-                // ´¦ÀíÇëÇó´íÎó
-                console.log("ÇëÇóÊ§°Ü:", error);
+                // å¤„ç†è¯·æ±‚é”™è¯¯
+                console.log("è¯·æ±‚å¤±è´¥:", error);
             });
         }
     
         function login() {
             function loginSuccessCallback() {
-                // µÇÂ¼³É¹¦£¬Ìø×ªµ½indexÒ³Ãæ
+                // ç™»å½•æˆåŠŸï¼Œè·³è½¬åˆ°indexé¡µé¢
                 window.location.href = "index_page/index.html";
             }
     
@@ -87,9 +88,9 @@
     
         function resetPassword() {
             function resetSuccessCallback() {
-                var confirmReset = confirm("È·¶¨ÒªÖØÖÃÃÜÂëÂğ£¿");
+                var confirmReset = confirm("ç¡®å®šè¦é‡ç½®å¯†ç å—ï¼Ÿ");
                 if (confirmReset) {
-                    // Ìø×ªµ½ÖØÖÃÃÜÂëÒ³Ãæ
+                    // è·³è½¬åˆ°é‡ç½®å¯†ç é¡µé¢
                     window.location.href = "reset-password.html";
                 }
             }
@@ -99,16 +100,16 @@
     </script>
 </head>
 <body>
-    <h1>µÇÂ¼½çÃæ</h1>
+    <h1>ç™»å½•ç•Œé¢</h1>
     <form>
-        <label for="username">ÓÃ»§Ãû£º</label>
+        <label for="username">ç”¨æˆ·åï¼š</label>
         <input type="text" id="username" name="username"><br><br>
 
-        <label for="password">ÃÜÂë£º</label>
+        <label for="password">å¯†ç ï¼š</label>
         <input type="password" id="password" name="password"><br><br>
 
-        <button id="loginBtn" type="button" onclick="login()">µÇÂ¼</button>
-        <button id="resetBtn" type="button" onclick="resetPassword()">ÖØÖÃ</button>
+        <button id="loginBtn" type="button" onclick="login()">ç™»å½•</button>
+        <button id="resetBtn" type="button" onclick="resetPassword()">é‡ç½®</button>
     </form>
 </body>
 </html>
