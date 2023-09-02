@@ -776,6 +776,7 @@
           console.log('Clicked:', event.target.textContent);
 
           var requestData = {
+              taskID: 11,
               taskName: "getRTData",
               responseTime: 3,
               data: {
@@ -1129,6 +1130,40 @@
       });
     }
 
+    // 创建一个WebSocket对象
+    const socket = new WebSocket('ws://192.168.1.136:9002');
+    // 为WebSocket对象的onmessage事件添加一个事件处理函数
+    socket.onmessage = function (event) {
+        const dataList = document.getElementById('dataList');
+        // 将接收到的消息解析为JSON对象
+        const data = JSON.parse(event.data);
+
+        // 更新表格的内容
+        dataList.innerHTML = '';
+        data.forEach((item, index) => {
+            const row = dataList.insertRow();
+            const cell1 = row.insertCell(0);
+            const cell2 = row.insertCell(1);
+            const cell3 = row.insertCell(2);
+            const cell4 = row.insertCell(3);
+            cell1.innerHTML = index + 1;
+            cell2.innerHTML = item.sourceName;
+            cell3.innerHTML = item.value;
+            cell4.innerHTML = item.unit;
+        });
+    };
+    // 为WebSocket对象的onopen事件添加一个事件处理函数
+    socket.onopen = function (event) {
+        console.log('WebSocket connection opened');
+    };
+    // 为WebSocket对象的onclose事件添加一个事件处理函数
+    socket.onclose = function (event) {
+        console.log('WebSocket connection closed');
+    };
+    // 为WebSocket对象的onerror事件添加一个事件处理函数
+    socket.onerror = function (event) {
+        console.error('WebSocket error:', event);
+    };
   </script>
 </head>
 <body>
@@ -1243,7 +1278,7 @@
                   <th>单位</th>
                 </tr>
               </thead>
-              <tbody id="deviceList">
+              <tbody id="dataList">
               </tbody>
             </table>
           </div>
