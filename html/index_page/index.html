@@ -104,6 +104,10 @@
 
     .device-activity-table {
         display: none;
+
+        height: 100%;  /* 你可以设置成你需要的高度 */
+        overflow-y: auto;  /* 当内容溢出时显示垂直滚动条 */
+        border: 1px solid #ccc;  /* 只是为了突出显示这个区域，可以根据需要去掉 */
     }
 
     #popupForm {
@@ -137,6 +141,17 @@
         height: 1%;
         background-color: #a1a0ee;
         clear: both;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
     }
   </style>
   <script>
@@ -186,7 +201,6 @@
         channelTable.style.display = 'block';
       });
       
-
       const btnDevMonitor = document.querySelector('#devmonitor-btn');
       const PCScollapseDevMonitor = document.querySelector('.devmonitor-collapse-PCS');
       const PCScollapsedContentDevMonitor = document.querySelector('.devmonitor-collapsed-PCS-content');
@@ -212,7 +226,7 @@
     });
 
     // 定义设备表格和通道表格的数据获取URL
-    const Url = "http://192.168.1.136:9000/api";
+    const Url = "http://172.16.138.129:8080/api";
     // 页面加载完成时请求数据并填充表格
     window.onload = function() {
       var requestData_getDevTable = {
